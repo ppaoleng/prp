@@ -1,3 +1,4 @@
+import streamlit as st
 n_cols = st.sidebar.selectbox("จำนวนเสา", [2, 3, 4])
 
 columns = []
