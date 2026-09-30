@@ -1,0 +1,97 @@
+[
+ [
+  "Abstract (duplicated sentence)",
+  "Cement mortar was ineffective on plain bars, and grout differed from epoxy only at 14.7 MPa or above.",
+  "Cement mortar was ineffective on plain bars."
+ ],
+ [
+  "Abstract (last sentence)",
+  "Strengths were nominal and groups small (n = 5), so the values are indicative; design use needs tests on the actual bar–agent–concrete combination.",
+  "Concrete strengths were nominal grades (companion cubes were not crushed in the original tests) and each group had only five specimens, so the values are indicative only; design use requires tests on the actual bar–agent–concrete combination."
+ ],
+ [
+  "Sec. 2.1 (confirmatory vs descriptive p values)",
+  "the confirmatory analysis is confined",
+  "the inferential analysis is confined"
+ ],
+ [
+  "Sec. 2.2 Concrete",
+  "the last two differ in the recorded curing period only (Table 2)",
+  "the last two differ only in the recorded curing period, 7 d and 14 d (Table 2)"
+ ],
+ [
+  "Sec. 2.2 Concrete",
+  "so the strengths quoted in this paper are nominal grades, and the possible consequences are discussed in Section 4.2.",
+  "so the strengths quoted in this paper are nominal grade labels and not measured values; the possible consequences are discussed in Section 4.2."
+ ],
+ [
+  "Sec. 2.3 installation",
+  "the bar was dipped in the freshly mixed agent and pushed into the hole",
+  "the bar was coated by dipping it in the freshly mixed agent and was then pushed into the hole"
+ ],
+ [
+  "Sec. 2.4",
+  "Peak load P was taken as the bond capacity.",
+  "The peak load P was taken as the pull-out capacity of the specimen."
+ ],
+ [
+  "Sec. 2.4",
+  "Slip records are not analysed here.",
+  "Load–slip records are not analysed in this paper."
+ ],
+ [
+  "Sec. 3.4 (8 of 45 specimens exceeded 235 MPa)",
+  "approached the catalogue yield level in part of the series",
+  "reached or exceeded the catalogue yield level in part of the series"
+ ],
+ [
+  "Sec. 3.5 (term defined at first use)",
+  "or by zero-bond slip-out (2)",
+  "or by zero-bond slip-out, in which the bar was withdrawn without recorded resistance (2)"
+ ],
+ [
+  "Sec. 3.6",
+  "though unevenly",
+  "although not uniformly across diameters"
+ ],
+ [
+  "Sec. 3.6",
+  "a net change that is not consistent in sign",
+  "a change whose sign differs among the three diameters"
+ ],
+ [
+  "Fig. 2 caption",
+  "and slip is read at the free end).",
+  "and slip is read at the free end). Hatching: dots, concrete; diagonal lines, steel bar; cross-hatching, bonding agent. GFRP bars were cast in place, without a bonding-agent annulus."
+ ],
+ [
+  "Fig. 3 caption",
+  "light points are individual specimens, and points at zero are specimens that recorded no load.",
+  "error bars are omitted for cement mortar, whose SD is below 0.1 MPa and smaller than the symbol."
+ ],
+ [
+  "Fig. 4 caption",
+  "(b) Mean τ by agent and bar diameter (n = 15 per point).",
+  "(b) Mean τ with 95% confidence intervals by agent and bar diameter (n = 15 per point)."
+ ],
+ [
+  "Fig. 4 caption",
+  "Light points in (a) and (b) are individual specimens.",
+  "Bar colour and hatching in (c) follow the agent legend in (a): epoxy, oblique lines; grout, dots; mortar, cross-hatching."
+ ],
+ [
+  "Fig. 5 caption",
+  "(mean ± 1 SD, n = 5; light points are individual specimens)",
+  "(mean ± 1 SD, n = 5)"
+ ],
+ [
+  "Fig. 7 caption",
+  "symbols are group means ± 1 SD, and dashed lines are",
+  "symbols are group means ± 1 SD, translucent vertical bars are the minimum–maximum range of the five specimens, and dashed lines are"
+ ],
+ [
+  "Fig. 9 caption",
+  "(mean ± 1 SD, n = 15 per point; light points are specimens)",
+  "(mean ± 1 SD, n = 15 per point)"
+ ]
+]
