@@ -1,0 +1,13 @@
+topic,study,key,dose_lo,dose_hi,effect,note
+biochar,"Wang et al. 2020 (wood BC, CO$_2$ cured)",wang2020,1,1,up,+8.9 % strength
+biochar,"Wang et al. 2020 (wood BC, CO$_2$ cured)",wang2020,5,5,down,strength reduced
+biochar,Gupta & Kua 2019 (micro-filler),gupta2019,1,2,up,
+biochar,Suarez-Riera et al. 2020,suarez2020,2,2,up,filler: ↑; substitute: ≈
+biochar,Ling et al. 2023,ling2023,3,3,up,hydration ↑
+biochar,Sacdalan et al. 2023 (bamboo BC),sacdalan2023,2,8,up,28 d ↑
+biochar,"Legan et al. 2025 (wood BC, cement repl.)",legan2025,5,5,up,+6 % (28 d)
+biochar,"Legan et al. 2025 (wood BC, cement repl.)",legan2025,10,15,down,≤ control
+biochar,Chin et al. 2025 (bamboo BC),chin2025,6,6,up,"optimum, 47.0 MPa"
+biochar,Ambaye et al. 2026 (MSW BC),ambaye2026,5,5,up,optimum
+biochar,Hylton et al. 2024 (selected BC),hylton2024,10,10,neutral,no loss
+biochar,Abbas & Thapa 2025,abbas2025,5,60,unknown,tested 5–60 %; block use

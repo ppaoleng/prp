@@ -1,0 +1,7 @@
+mix,specimen,mass_kg,strength_MPa,mean_reported
+RCA 0%,1,7.66,37.5,37.15
+RCA 0%,2,7.67,37.19,
+RCA 0%,3,7.78,36.75,
+RCA 10%,1,7.72,51.24,52.13
+RCA 10%,2,7.73,52.13,
+RCA 10%,3,7.75,53.02,

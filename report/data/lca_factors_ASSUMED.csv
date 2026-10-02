@@ -1,0 +1,8 @@
+,mode,low,high,status
+cement,0.76,0.63,0.9,ASSUMED - replace with Thai LCI/TGO/ecoinvent value
+sand,0.004,0.002,0.008,ASSUMED - replace with Thai LCI/TGO/ecoinvent value
+stone,0.005,0.003,0.009,ASSUMED - replace with Thai LCI/TGO/ecoinvent value
+rca,0.006,0.003,0.012,ASSUMED - replace with Thai LCI/TGO/ecoinvent value
+biochar,0.25,0.05,0.6,ASSUMED - replace with Thai LCI/TGO/ecoinvent value
+biogenic C fraction,0.75,0.65,0.85,ASSUMED
+permanence (100 y),0.8,0.5,0.95,ASSUMED
