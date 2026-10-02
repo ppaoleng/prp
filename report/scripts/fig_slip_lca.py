@@ -87,7 +87,7 @@ def fig_bpn_risk():
         ax.errorbar(r.bpn_wet, i, xerr=r.sd_wet, fmt="s", mfc="white", mec=LINE, color=LINE, capsize=2, ms=5, zorder=4)
         ax.errorbar(r.bpn_dry, i, xerr=r.sd_dry, fmt="o", mfc=MIXCOL[m], mec=LINE, color=LINE, capsize=2, ms=5, zorder=4)
     ax.axvline(THR_A, color=INK, ls="--", lw=0.9); ax.axvline(THR_B, color=WARM_EDGE, ls="-.", lw=0.9)
-    ax.text(THR_A, -0.9, "45 [to be verified]", ha="center", va="top", fontsize=6.4); ax.text(THR_B, -0.9, "60 [to be verified]", ha="center", va="top", fontsize=6.4, color=WARM_EDGE)
+    ax.text(THR_A - 0.8, -1.25, "45 [to be verified]", ha="right", va="center", fontsize=6.4, bbox=whitebox()); ax.text(THR_B + 0.8, -1.25, "60 [to be verified]", ha="left", va="center", fontsize=6.4, color=WARM_EDGE, bbox=whitebox())
     ax.set_yticks(range(len(ALL))); ax.set_yticklabels([LAB[m] for m in ALL[::-1]], fontsize=7.4); ax.set_xlim(0, 85); ax.set_ylim(-1.4, len(ALL) + 1.0)
     ax.set_xlabel("Pendulum value at 28 d (BPN / PTV scale)")
     h = [Line2D([], [], marker="o", ls="", mfc=INK_SEC, mec=LINE, label="Dry"), Line2D([], [], marker="s", ls="", mfc="white", mec=LINE, label="Wet")]
@@ -127,14 +127,13 @@ def fig_lca_eco():
     xx = np.linspace(x0, x1, 50)
     for ci, ls in ((3, ":"), (4, ":"), (5, ":"), (6, "--"), (8, ":"), (10, ":")):
         a.plot(xx, xx / ci, color=GRID if ci != 6 else INK_SEC, lw=0.8, ls=ls, zorder=1)
-        yy = (x1 - 1) / ci
-        if 32 < yy < 98: a.text(x1 - 1, yy, f"ci={ci}", fontsize=6.0, color=INK_SEC, ha="right", va="bottom", bbox=whitebox(alpha=0.7))
-    offs = {"NA": (5, 3), "RA": (-5, 6), "Rab5": (5, -9), "Rab10": (5, -9), "Rab15": (-6, -11), "RCA0": (5, -9), "RCA15": (5, 5)}
+        yy = (x0 + 1) / ci
+        if 32 < yy < 98: a.text(x0 + 1, yy, f"ci={ci}", fontsize=6.0, color=INK_SEC, ha="left", va="bottom", bbox=whitebox(alpha=0.8), zorder=2)
+    offs = {"NA": (5, 3), "RA": (-5, 6), "Rab5": (5, -9), "Rab10": (5, -9), "Rab15": (6, -3), "RCA0": (-6, -10), "RCA15": (-6, 8)}
     for m in TEST:
         r = RES.loc[m]; a.plot(r.gwp_A, r.fc28, "o", mfc=MIXCOL[m], mec=LINE, ms=6.4, zorder=5)
-        if m in offs: a.annotate(LAB[m] if m != "RCA15" else "RCA5\u201315%", (r.gwp_A, r.fc28), xytext=offs[m], textcoords="offset points", fontsize=6.8, zorder=6, ha="left" if offs[m][0] > 0 else "right")
+        if m in offs: a.annotate(LAB[m] if m != "RCA15" else "RCA5\u201315%", (r.gwp_A, r.fc28), xytext=offs[m], textcoords="offset points", fontsize=6.8, zorder=6, ha="left" if offs[m][0] > 0 else "right", bbox=whitebox(alpha=0.75))
     a.set_xlim(x0, x1); a.set_ylim(30, 100); a.set_xlabel("GWP, scenario A (kg CO$_2$e per m$^3$)"); a.set_ylabel("28-d compressive strength (MPa)"); panel(a, "(a)")
-    a.text(0.02, 0.04, "dotted: ci = GWP / $f_c$ (kg CO$_2$e m$^{-3}$ MPa$^{-1}$)", transform=a.transAxes, ha="left", fontsize=6.2, color=INK_SEC, bbox=whitebox())
     b = ax[1]; xs = np.arange(len(TEST)); w = 0.38
     b.bar(xs - w / 2, RES.loc[TEST, "gwpA_per_MPa"], w, color=[MIXCOL[m] for m in TEST], edgecolor=LINE, zorder=3)
     b.bar(xs + w / 2, RES.loc[TEST, "gwpB_per_MPa"].clip(lower=0), w, color="white", edgecolor=LINE, hatch="////", zorder=3)
@@ -183,11 +182,11 @@ def fig_standards():
     s28 = S[S.age == 28].set_index("mix").reindex(ALL)
     ys = np.arange(len(ALL))[::-1]
     for y, m in zip(ys, ALL):
-        r = s28.loc[m]; ax.barh(y, r["mean"], 0.58, color=MIXCOL[m], edgecolor=LINE, xerr=r.sd, capsize=2, zorder=3, error_kw=dict(lw=0.8))
-        ax.text(r["mean"] + r.sd + 1, y, f"{r['mean']:.1f}", va="center", fontsize=7)
+        r = s28.loc[m]; ax.barh(y, r["mean_reported"], 0.58, color=MIXCOL[m], edgecolor=LINE, xerr=r.sd, capsize=2, zorder=3, error_kw=dict(lw=0.8))
+        ax.text(r["mean_reported"] + r.sd + 1, y, f"{r['mean_reported']:.1f}", va="center", fontsize=7)
     crit = [(20, "JIEPA", ":"), (30, "IS 15658", ":"), (35, "TIS 827-2565", "--"), (50, "TIS 2035-2565", "-."), (55, "ASTM C936", ":")]
     for x, t, ls in crit:
-        ax.axvline(x, color=INK_SEC, ls=ls, lw=0.9, zorder=2); ax.text(x, len(ALL) - 0.3, f"{t}: {x}", rotation=90, ha="center", va="bottom", fontsize=6.2, color=INK_SEC)
+        ax.axvline(x, color=INK_SEC, ls=ls, lw=0.9, zorder=2); ax.text(x - 0.7, len(ALL) - 0.3, f"{t}: {x}", rotation=90, ha="right", va="bottom", fontsize=6.2, color=INK_SEC)
     ax.set_yticks(ys); ax.set_yticklabels([LAB[m] for m in ALL], fontsize=7.4); ax.set_xlim(0, 112); ax.set_ylim(-0.6, len(ALL) + 1.9)
     ax.set_xlabel("28-d compressive strength (MPa)"); ax.xaxis.grid(True, color=GRID, lw=0.4, zorder=0); fig.tight_layout(); save(fig, "r_standards")
 

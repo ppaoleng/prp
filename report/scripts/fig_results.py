@@ -48,10 +48,10 @@ def bars(series, order, xlab, fname, ymax, lines=True):
     w = 0.26; x = np.arange(len(order))
     for j, age in enumerate((7, 14, 28)):
         sub = S[(S.series == series) & (S.age == age)].set_index("mix").reindex(order)
-        ax.bar(x + (j - 1) * w, sub["mean"], w, yerr=sub["sd"], color=[MIXCOL[m] for m in order], edgecolor=LINE,
+        ax.bar(x + (j - 1) * w, sub["mean_reported"], w, yerr=sub["sd"], color=[MIXCOL[m] for m in order], edgecolor=LINE,
                hatch=AGEHATCH[age], capsize=2, error_kw=dict(lw=0.8, capthick=0.8), zorder=3)
         if age == 28:
-            for xi, v, sd in zip(x + (j - 1) * w, sub["mean"], sub["sd"]):
+            for xi, v, sd in zip(x + (j - 1) * w, sub["mean_reported"], sub["sd"]):
                 ax.text(xi, v + sd + ymax * 0.012, f"{v:.1f}", ha="center", va="bottom", fontsize=7, zorder=6)
     ax.axhline(TIS827_MPa, color=INK, ls="--", lw=0.9, zorder=2)
     ax.axhline(TIS2035_MPa, color=WARM_EDGE, ls="-.", lw=0.9, zorder=2)
@@ -67,7 +67,7 @@ def dev(series, order, fname, ymax, cols):
     fig, ax = plt.subplots(figsize=(6.0, 3.2))
     for m in order:
         sub = S[(S.series == series) & (S.mix == m)].sort_values("age")
-        ax.errorbar(sub.age, sub["mean"], yerr=sub["sd"], marker="o", color=cols[m], mec=LINE, mfc=cols[m], capsize=2,
+        ax.errorbar(sub.age, sub["mean_reported"], yerr=sub["sd"], marker="o", color=cols[m], mec=LINE, mfc=cols[m], capsize=2,
                     lw=1.2, label=LAB[m], zorder=4)
     ax.axhline(TIS827_MPa, color=INK, ls="--", lw=0.9); ax.axhline(TIS2035_MPa, color=WARM_EDGE, ls="-.", lw=0.9)
     ax.set_xticks([7, 14, 28]); ax.set_xlim(5, 30); ax.set_ylim(0, ymax)

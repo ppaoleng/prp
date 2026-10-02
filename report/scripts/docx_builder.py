@@ -12,6 +12,7 @@ from thai_docx import insert_zwsp
 from word_equation import latex_to_omml
 
 RED = "C00000"
+HF = "TH SarabunPSK"
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 _bm = [2000]
 def _el(tag, **attrs):
@@ -165,18 +166,18 @@ class Builder:
         p = OxmlElement("w:p"); ppr = OxmlElement("w:pPr")
         ps = OxmlElement("w:pStyle"); ps.set(qn("w:val"), "Heading1"); ppr.append(ps); ppr.append(OxmlElement("w:pageBreakBefore"))
         sp = OxmlElement("w:spacing"); sp.set(qn("w:before"), "0"); ppr.append(sp); p.append(ppr)
-        p.append(mk_run(f"บทที่ {no}", bold=True)); r = OxmlElement("w:r"); r.append(OxmlElement("w:br")); p.append(r); p.append(mk_run(title, bold=True))
+        p.append(mk_run(f"บทที่ {no}", bold=True, font=HF)); r = OxmlElement("w:r"); r.append(OxmlElement("w:br")); p.append(r); p.append(mk_run(title, bold=True, font=HF))
         name = f"_TocPRP{len(self.toc_items)+1}"; self.bm(p, name); self.toc_items.append(("h1", 1, f"บทที่ {no} {title}", name)); return self.add(p)
     def h1_plain(self, title, toc=True):
         p = OxmlElement("w:p"); ppr = OxmlElement("w:pPr"); ps = OxmlElement("w:pStyle"); ps.set(qn("w:val"), "Heading1"); ppr.append(ps); ppr.append(OxmlElement("w:pageBreakBefore"))
-        sp = OxmlElement("w:spacing"); sp.set(qn("w:before"), "0"); ppr.append(sp); p.append(ppr); p.append(mk_run(title, bold=True))
+        sp = OxmlElement("w:spacing"); sp.set(qn("w:before"), "0"); ppr.append(sp); p.append(ppr); p.append(mk_run(title, bold=True, font=HF))
         name = f"_TocPRP{len(self.toc_items)+1}"; self.bm(p, name)
         if toc: self.toc_items.append(("h1", 1, title, name))
         return self.add(p)
     def h2(self, text):
-        p = mk_p(self.R(text), style="Heading2"); [r.find(qn("w:rPr")).insert(0, OxmlElement("w:b")) for r in p.findall(qn("w:r")) if r.find(qn("w:rPr")) is not None and r.find(qn("w:rPr")).find(qn("w:b")) is None]
+        p = mk_p(self.R(text), style="Heading2", fmt={"bold": True, "font": HF})
         name = f"_TocPRP{len(self.toc_items)+1}"; self.bm(p, name); self.toc_items.append(("h2", 2, self.R(text), name)); return self.add(p)
-    def h3(self, text): return self.add(mk_p(self.R(text), style="Heading3"))
+    def h3(self, text): return self.add(mk_p(self.R(text), before=160, after=80, first=True, keep_next=True, fmt={"bold": True}))
     # ---- figures ----
     def fig(self, key, path, width_cm, caption, source=None, note=None):
         lab = self._label("fig", key); caption = f"ภาพที่ {lab} " + caption
@@ -295,3 +296,36 @@ class Builder:
             u = OxmlElement("w:updateFields"); u.set(qn("w:val"), "true"); st.append(u)
     def save(self, path):
         self.prune_rels(); self.doc.save(path)
+
+
+# ---------------------------------------------------------------- front-matter helpers (TOC / lists)
+def _fld(kind):
+    r = OxmlElement("w:r"); f = OxmlElement("w:fldChar"); f.set(qn("w:fldCharType"), kind); r.append(f); return r
+
+def _instr(text):
+    r = OxmlElement("w:r"); i = OxmlElement("w:instrText"); i.set("{http://www.w3.org/XML/1998/namespace}space", "preserve"); i.text = text; r.append(i); return r
+
+def toc_paragraphs(instr, entries, pages, indent2=360):
+    """entries = [(kind, level, text, bookmark)]; returns list of <w:p> forming one TOC-type field with cached entries."""
+    out = []
+    for n, (kind, level, text, bm) in enumerate(entries):
+        p = OxmlElement("w:p"); ppr = OxmlElement("w:pPr")
+        ps = OxmlElement("w:pStyle"); ps.set(qn("w:val"), "TOC1"); ppr.append(ps)
+        tabs = OxmlElement("w:tabs"); t = OxmlElement("w:tab"); t.set(qn("w:val"), "right"); t.set(qn("w:leader"), "dot"); t.set(qn("w:pos"), "8659"); tabs.append(t); ppr.append(tabs)
+        sp = OxmlElement("w:spacing"); sp.set(qn("w:after"), "40" if kind in ("fig", "tab") else "60"); ppr.append(sp)
+        if level == 2 and kind == "h2":
+            ind = OxmlElement("w:ind"); ind.set(qn("w:left"), str(indent2)); ppr.append(ind)
+        elif kind in ("fig", "tab"):
+            ind = OxmlElement("w:ind"); ind.set(qn("w:left"), "1134"); ind.set(qn("w:hanging"), "1134"); ppr.append(ind)
+        p.append(ppr)
+        if n == 0:
+            p.append(_fld("begin")); p.append(_instr(instr)); p.append(_fld("separate"))
+        h = OxmlElement("w:hyperlink"); h.set(qn("w:anchor"), bm); h.set(qn("w:history"), "1")
+        for r in parse_inline(text, {"bold": kind == "h1"}, sz=(28 if kind in ("fig", "tab") else None)):
+            rpr = r.find(qn("w:rPr")); rs = OxmlElement("w:rStyle"); rs.set(qn("w:val"), "Hyperlink"); rpr.insert(0, rs); rpr.append(OxmlElement("w:noProof")); h.append(r)
+        r2 = OxmlElement("w:r"); r2p = OxmlElement("w:rPr"); r2p.append(OxmlElement("w:noProof")); r2p.append(OxmlElement("w:webHidden")); r2.append(r2p); r2.append(OxmlElement("w:tab")); h.append(r2)
+        r3 = OxmlElement("w:r"); r3p = OxmlElement("w:rPr"); r3p.append(OxmlElement("w:noProof")); r3p.append(OxmlElement("w:webHidden")); r3.append(r3p)
+        tt = OxmlElement("w:t"); tt.text = str(pages.get(text, "")); r3.append(tt); h.append(r3)
+        p.append(h); out.append(p)
+    endp = OxmlElement("w:p"); endp.append(_fld("end")); out.append(endp)
+    return out

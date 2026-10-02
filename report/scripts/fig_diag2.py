@@ -72,7 +72,7 @@ def rca_qc():
     ax.add_patch(Rectangle((1.5, 4), 97, 13, facecolor="#f4f2ec", edgecolor=LINE, lw=0.7, zorder=2))
     label(ax, 3.5, 13.8, "ผลต่อสมบัติ RCA", 6.6, "left", wt="bold")
     label(ax, 3.5, 8.3, "มอร์ตาร์เดิมที่เกาะผิวทำให้ความพรุนสูง ดูดซึมน้ำมาก ความหนาแน่นต่ำ  ·  การปรับสภาพ (ball milling, carbonation, polymer ฯลฯ) ช่วยลดผลเสียดังกล่าว", 6.0, "left", color=INK_SEC, fam=THL)
-    ax.text(3.6, 20.2, "เส้นประ = ขั้นตอนที่ไม่ได้ใช้ในงานนี้ (ยืนยันกับผู้วิจัย)", fontsize=5.8, family=THL, color=INK_SEC, va="center")
+    ax.text(3.6, 20.2, "เส้นประ = ขั้นตอนที่ร่างเดิมไม่ได้ระบุว่าดำเนินการ", fontsize=5.8, family=THL, color=INK_SEC, va="center")
     ax.set_ylim(3, 46); save(fig, "s_rca_qc")
 
 def lca_stages():
