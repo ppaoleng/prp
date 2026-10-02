@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from prp_data import *
 
 K_AGE = 6.5
-rng = np.random.default_rng(20690101)   # fixed seed -> reproducible placeholders
+SEED = 20690101   # fixed seed -> reproducible placeholders (a fresh generator is created on every build() call)
 
 ANCHOR = {  # (dry28, wet28) -- Table 4-6 of the draft (example values) ; NA is an added placeholder
     "NA":   (68.6, 59.1),
@@ -26,6 +26,7 @@ ANCHOR = {  # (dry28, wet28) -- Table 4-6 of the draft (example values) ; NA is 
 SERIES = {m: "I" for m in S1_ORDER} | {m: "II" for m in S2_ORDER}
 
 def build():
+    rng = np.random.default_rng(SEED)
     S = strength_summary().set_index(["mix", "age"])
     rows = []
     for mix, (d28, w28) in ANCHOR.items():

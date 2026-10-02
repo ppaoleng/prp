@@ -90,7 +90,7 @@ def mk_p(text="", style=None, first=False, after=None, before=None, jc=None, kee
     return p
 
 CITE = re.compile(r"\{c:([^}]+)\}")
-REF = re.compile(r"\{(fig|tab|eq):(\w+)\}")
+REF = re.compile(r"\{(fig|tab|eq|fign|tabn|eqn):(\w+)\}")
 def compress(nums):
     nums = sorted(set(nums)); out = []; i = 0
     while i < len(nums):
@@ -139,11 +139,13 @@ class Builder:
             return "[" + compress(nums) + "]"
         t = CITE.sub(c, t)
         def r(m):
-            kind, key = m.groups(); lab = self.reg.labels[kind].get(key)
+            kind, key = m.groups(); bare = kind.endswith("n") and kind != "eq"; bare = bare or kind == "eqn"; kind = kind[:-1] if bare else kind
+            lab = self.reg.labels[kind].get(key)
             if lab is None:
                 if self.final: self.reg.missing.add(f"{kind}:{key}")
                 return "?"
-            return {"fig": "ภาพที่ ", "tab": "ตารางที่ ", "eq": "สมการที่ "}[kind] + lab
+            if os.environ.get("REFDEBUG"): lab = "\u27e6" + lab + "\u27e7"
+            return ("" if bare else {"fig": "ภาพที่ ", "tab": "ตารางที่ ", "eq": "สมการที่ "}[kind]) + lab
         return REF.sub(r, t)
     def p(self, text, **kw):
         kw.setdefault("after", 120); kw.setdefault("first", True)
