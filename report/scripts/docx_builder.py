@@ -324,7 +324,9 @@ def toc_paragraphs(instr, entries, pages, indent2=360):
             p.append(_fld("begin")); p.append(_instr(instr)); p.append(_fld("separate"))
         h = OxmlElement("w:hyperlink"); h.set(qn("w:anchor"), bm); h.set(qn("w:history"), "1")
         for r in parse_inline(text, {"bold": kind == "h1"}, sz=(28 if kind in ("fig", "tab") else None)):
-            rpr = r.find(qn("w:rPr")); rs = OxmlElement("w:rStyle"); rs.set(qn("w:val"), "Hyperlink"); rpr.insert(0, rs); rpr.append(OxmlElement("w:noProof")); h.append(r)
+            rpr = r.find(qn("w:rPr")); rs = OxmlElement("w:rStyle"); rs.set(qn("w:val"), "Hyperlink"); rpr.insert(0, rs)
+            np_ = OxmlElement("w:noProof"); nxt = next((c for c in rpr if c.tag in {qn("w:" + t) for t in ("color", "spacing", "sz", "szCs", "vertAlign", "lang")}), None)
+            (nxt.addprevious(np_) if nxt is not None else rpr.append(np_)); h.append(r)
         r2 = OxmlElement("w:r"); r2p = OxmlElement("w:rPr"); r2p.append(OxmlElement("w:noProof")); r2p.append(OxmlElement("w:webHidden")); r2.append(r2p); r2.append(OxmlElement("w:tab")); h.append(r2)
         r3 = OxmlElement("w:r"); r3p = OxmlElement("w:rPr"); r3p.append(OxmlElement("w:noProof")); r3p.append(OxmlElement("w:webHidden")); r3.append(r3p)
         tt = OxmlElement("w:t"); tt.text = str(pages.get(text, "")); r3.append(tt); h.append(r3)
