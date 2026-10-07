@@ -58,7 +58,7 @@ dhw, dhh = 1.16, 0.45
 dcx, dcy = LX + LW / 2, b3[1] - 0.26 - dhh
 ax.add_patch(Polygon([(dcx - dhw, dcy), (dcx, dcy + dhh), (dcx + dhw, dcy), (dcx, dcy - dhh)], closed=True,
                      fc="white", ec=S.INK, lw=0.8, zorder=2))
-ax.text(dcx, dcy, "Calibrated\nstiffness matched?", fontsize=BODY_FS + 0.1, ha="center", va="center", linespacing=1.2, zorder=3)
+ax.text(dcx, dcy, "Calibrated\nstiffness matched", fontsize=BODY_FS + 0.1, ha="center", va="center", linespacing=1.2, zorder=3)
 ax.annotate("", xy=(dcx, dcy + dhh), xytext=(b3[0] + b3[2] / 2, b3[1]), arrowprops=ARROW, zorder=4)
 left_bottom = dcy - dhh - 0.10
 
@@ -66,13 +66,13 @@ left_bottom = dcy - dhh - 0.10
 b4 = box(RX, YT - HDR, RW, 0.66, "4. Modified models M2\u2013M5",
          "stepped PU 30/20/10 cm, 5 m each, with or\nwithout auxiliary rail and enlarged sleepers")
 b5 = box(RX, b4[1] - 0.20, RW, 0.82, "5. Static stiffness profile",
-         r"$k_d = \Sigma Q_i \, / \, \Sigma w_j$ over five sleepers under" "\n" r"a 20-t axle load (Eq. 1); ratio $\rho$ (Eq. 2)",
+         r"$k_d = \Sigma Q \, / \, \Sigma w_s$ over five sleepers under" "\n" r"a 20-t axle load (Eq. 1); ratio $\rho$ (Eq. 2)",
          tag=r"Output: peak $k_d$ and $\rho$ (Fig. 3, Table 5)")
 down(b4, b5)
 r1_bottom = b5[1] - 0.12
 r2_top = r1_bottom - 0.12
 b6 = box(RX, r2_top - HDR, RW, 0.84, "6. Vehicle\u2013track dynamics",
-         "Universal Mechanism (UM), one car, 60\u2013120 km/h;\nstiffness profile from Step 5 used as\ntrack input")
+         "Universal Mechanism (UM), one car, 60\u2013120 km/h;\nstiffness profile from Step 5 used as\ntrack input (one-way transfer)")
 b7 = box(RX, b6[1] - 0.20, RW, 0.82, "7. Comparison",
          "peak wheel\u2013rail contact force and\nreduction relative to M1 (Eq. 3)",
          tag="Output: Figs. 4\u20136, Tables 6 and 7")

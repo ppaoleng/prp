@@ -1,9 +1,11 @@
 """Fig. 2 - schematic longitudinal section of the modified track (not to scale).
 
-Layer order, PU zone order (30 cm next to the bridge), extent of the auxiliary rail and of the
-enlarged sleepers (zones 1-2, 'indicative') and all labels follow the original Fig. 2 of the manuscript.
-Vertical thicknesses are drawn at a common exaggerated scale (1 in = 1 m) so that 10/20/30 cm PU
-and 0.40 m ballast are mutually proportional.
+Version 3: PU occupies the UPPER part of the ballast layer (measured from the underside of the sleepers),
+sleepers rest directly on the bridge deck, the vehicle runs from the ballasted approach onto the bridge
+(all as stated in Sect. 2.2-2.3 of manuscript V2). Zone order (30 cm next to the bridge) and the indicative
+extent of the auxiliary rail / enlarged sleepers (zones 1-2) follow the earlier figure.
+Vertical thicknesses use one exaggerated scale (1 in = 1 m) so that 0.40 m ballast and 10/20/30 cm PU stay
+mutually proportional; horizontal lengths are schematic.
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,7 +13,7 @@ from matplotlib.patches import Rectangle
 import fig_style as S
 
 S.apply_style()
-W, H = 6.5, 2.72
+W, H = 6.5, 2.78
 fig = plt.figure(figsize=(W, H))
 ax = fig.add_axes([0, 0, 1, 1])
 ax.set_xlim(0, W); ax.set_ylim(0, H); ax.set_aspect("equal"); ax.axis("off")
@@ -19,12 +21,13 @@ ax.set_xlim(0, W); ax.set_ylim(0, H); ax.set_aspect("equal"); ax.axis("off")
 # ---- geometry (inches) -------------------------------------------------------------------
 X0, XA, XB, XE = 0.42, 1.52, 3.86, 5.70        # left end, approach|PU, PU|bridge, right end
 ZW = (XB - XA) / 3                              # width of one PU zone
-Y_SUB0, Y_SUB1 = 0.62, 0.92                     # sub-ballast
+Y_SUB0, Y_SUB1 = 0.78, 1.08                     # sub-ballast
 Y_BAL1 = Y_SUB1 + 0.40                          # ballast top (0.40 m)
 Y_SLP1 = Y_BAL1 + 0.11                          # sleeper top
 Y_RAIL1 = Y_SLP1 + 0.075                        # rail top
-PU_T = {3: 0.10, 2: 0.20, 1: 0.30}              # zone number -> thickness (1 in = 1 m)
+PU_T = {3: 0.10, 2: 0.20, 1: 0.30}              # zone number -> PU thickness (1 in = 1 m)
 ZONE_X = {3: XA, 2: XA + ZW, 1: XA + 2 * ZW}    # left edge of each zone
+PU_FC, PU_HC = "#ead9bf", S.WARM
 
 
 def region(x, y, w, h, fc, hatch=None, hc=S.INK_SEC, ec=S.LINE, lw=0.7, z=1):
@@ -50,12 +53,10 @@ def dim(x0, y0, x1, y1, lw=0.7, both=True):
 # ---- ground layers ----------------------------------------------------------------------
 region(X0, Y_SUB0, XB - X0, Y_SUB1 - Y_SUB0, S.SOIL_SAND, "....", hc="#8a8472")                  # sub-ballast
 region(X0, Y_SUB1, XB - X0, Y_BAL1 - Y_SUB1, S.GROUND, "oo", hc="#8f8c82")                        # ballast
-for k in (3, 2, 1):                                                                              # PU zones
-    region(ZONE_X[k], Y_SUB1, ZW, PU_T[k], "#ead9bf", "\\\\\\\\\\", hc=S.WARM, lw=0.7, z=2)
-ax.plot([ZONE_X[3], XB], [Y_SUB1, Y_SUB1], color=S.LINE, lw=0.7, zorder=3)
-for k in (3, 2):                                                                                 # zone boundaries
-    ax.plot([ZONE_X[k] + ZW] * 2, [Y_SUB1, Y_BAL1], color=S.LINE, lw=0.5, zorder=3, ls=(0, (3, 2)))
-ax.plot([XA, XA], [Y_SUB1, Y_BAL1], color=S.LINE, lw=0.5, zorder=3, ls=(0, (3, 2)))
+for k in (3, 2, 1):                                                                              # PU: upper part of ballast
+    region(ZONE_X[k], Y_BAL1 - PU_T[k], ZW, PU_T[k], PU_FC, "\\\\\\\\\\", hc=PU_HC, lw=0.7, z=2)
+for k in (3, 2, 1):                                                                              # zone boundaries (full ballast depth)
+    ax.plot([ZONE_X[k]] * 2, [Y_SUB1, Y_BAL1], color=S.LINE, lw=0.5, zorder=3, ls=(0, (3, 2)))
 region(XB, Y_SUB0, XE - XB, Y_SLP1 - 0.11 - Y_SUB0, "#e3e5e8", "xx", hc="#9aa0aa")                # bridge deck
 
 # ---- sleepers and rail ------------------------------------------------------------------
@@ -67,26 +68,34 @@ ax.add_patch(Rectangle((X0, Y_SLP1), XE - X0, Y_RAIL1 - Y_SLP1, fc="#3c4148", ec
 # auxiliary rail and enlarged sleepers: zones 2 and 1 (indicative extent)
 XM0, XM1 = ZONE_X[2], XB
 ax.add_patch(Rectangle((XM0, Y_RAIL1 + 0.035), XM1 - XM0, 0.075, fc=S.STEEL, ec=S.STEEL_EDGE, hatch="////", lw=0.6, zorder=5))
-ax.add_patch(Rectangle((XM0 - 0.01, Y_BAL1 - 0.015), XM1 - XM0 + 0.02, Y_SLP1 - Y_BAL1 + 0.03, fc="none",
+ax.add_patch(Rectangle((XM0 - 0.01, Y_BAL1 + 0.012), XM1 - XM0 + 0.02, Y_SLP1 - Y_BAL1 + 0.02, fc="none",
                        ec=S.INK, lw=0.9, ls=(0, (3.5, 2.2)), zorder=6))
 
-# ---- annotations: material labels -------------------------------------------------------
-label(X0 + 0.55, Y_BAL1 - 0.20, "Ballast\n(E = 100 MPa)", bbox=S.halo(), linespacing=1.15)
-label(X0 + 0.90, Y_SUB0 + 0.15, "Sub-ballast (E = 40 MPa)", bbox=S.halo(), fontsize=7.3)
-label((XB + XE) / 2, (Y_SUB0 + Y_SLP1 - 0.11) / 2, "Concrete bridge deck\n(simple support)", bbox=S.halo(), linespacing=1.15)
+# ---- material labels --------------------------------------------------------------------
+label(X0 + 0.55, Y_BAL1 - 0.20, "Ballast\n(E = 100 MPa)", bbox=S.halo(pad=0.2), linespacing=1.15)
+label(X0 + 0.90, Y_SUB0 + 0.15, "Sub-ballast (E = 40 MPa)", bbox=S.halo(pad=0.2), fontsize=7.3)
+label((XB + XE) / 2, (Y_SUB0 + Y_SLP1 - 0.11) / 2, "Concrete bridge deck\n(simple support)", bbox=S.halo(pad=0.2), linespacing=1.15)
 
-# PU thickness dimensions inside each zone
+# PU thickness: dimension arrow inside each zone (values are given with the zone names below)
 for k in (3, 2, 1):
     xc = ZONE_X[k] + ZW / 2
-    t = PU_T[k]
-    dim(xc, Y_SUB1 + 0.005, xc, Y_SUB1 + t - 0.005, lw=0.6)
-    label(xc + 0.04, Y_SUB1 + t / 2, f"{int(round(t * 100))} cm", ha="left", fontsize=7.2, bbox=S.halo(pad=0.1), zorder=9)
-    label(xc, Y_SUB0 - 0.23, f"PU zone {k}", fontsize=7.8)
-    dim(ZONE_X[k] + 0.01, Y_SUB0 - 0.085, ZONE_X[k] + ZW - 0.01, Y_SUB0 - 0.085, lw=0.6)
+    dim(xc, Y_BAL1 - PU_T[k] + 0.004, xc, Y_BAL1 - 0.004, lw=0.65)
+
+# zone widths and names below the section
+for k in (3, 2, 1):
+    xc = ZONE_X[k] + ZW / 2
+    yd = Y_SUB0 - 0.10
+    dim(ZONE_X[k] + 0.01, yd, ZONE_X[k] + ZW - 0.01, yd, lw=0.6)
     for xx in (ZONE_X[k], ZONE_X[k] + ZW):
-        ax.plot([xx, xx], [Y_SUB0 - 0.04, Y_SUB0 - 0.13], color=S.INK, lw=0.5, zorder=7)
-    label(xc, Y_SUB0 - 0.38, "5 m", fontsize=7.2, color=S.INK_SEC)
-ax.plot([XE, XE], [Y_SUB0 - 0.04, Y_SUB0 - 0.13], color=S.INK, lw=0.0)
+        ax.plot([xx, xx], [Y_SUB0 - 0.04, yd - 0.05], color=S.INK, lw=0.5, zorder=7)
+    label(xc, yd, "5 m", fontsize=7.2, color=S.INK, bbox=S.halo(pad=0.12, alpha=1.0))
+    label(xc, yd - 0.20, f"PU zone {k}", fontsize=7.8)
+    label(xc, yd - 0.34, f"{int(round(PU_T[k] * 100))} cm thick", fontsize=7.2, color=S.INK_SEC)
+
+# key for the PU hatch (right, below the bridge)
+kx, ky = XB + 0.35, Y_SUB0 - 0.30
+ax.add_patch(Rectangle((kx, ky - 0.06), 0.30, 0.12, fc=PU_FC, ec=S.LINE, hatch="\\\\\\\\\\", lw=0.6, zorder=3))
+label(kx + 0.38, ky, "PU-injected ballast (E = 360 MPa)", ha="left", fontsize=7.4)
 
 # 0.40 m ballast depth (left)
 dim(X0 - 0.14, Y_SUB1, X0 - 0.14, Y_BAL1, lw=0.6)
@@ -113,8 +122,8 @@ for (x0, x1, txt) in [(X0, XA - 0.04, "Ballasted approach"), (XA + 0.04, XB - 0.
     label((x0 + x1) / 2, Y_SPAN + 0.03, txt, fontsize=8.0)
 
 # running direction
-dim(X0 + 0.05, Y_RAIL1 + 0.62, X0 + 0.80, Y_RAIL1 + 0.62, lw=0.9, both=False)
-label(X0 + 0.05, Y_RAIL1 + 0.75, "Running direction", ha="left", fontsize=7.4, color=S.INK_SEC)
+dim(X0 + 0.05, Y_RAIL1 + 0.47, X0 + 0.80, Y_RAIL1 + 0.47, lw=0.9, both=False)
+label(X0 + 0.05, Y_RAIL1 + 0.60, "Running direction", ha="left", fontsize=7.4, color=S.INK_SEC)
 
 # auxiliary rail / enlarged sleepers callouts (extent indicative)
 label(XM0 + 0.38, Y_RAIL1 + 0.55, "Auxiliary rail (M3, M5)", ha="right", fontsize=7.8)
