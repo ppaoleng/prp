@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<title>Google Form header – 020323110 Computer Program (BIM)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Fonts: Prompt (SIL OFL). Falls back to a locally installed copy when offline. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Variant is chosen with ?v=sky (default) or ?v=navy */
+  :root {
+    --bg1: #f1f8fe; --bg2: #d3e8f8; --bg3: #bcdcf2;
+    --grid: rgba(60, 120, 190, .10);
+    --ink: #1c3f78; --ink-soft: #3a63a6;
+    --accent: #ffc83d; --accent-deep: #f4a912;
+    --chip-bg: #ffffffd9; --chip-bd: #b5d3ee; --chip-ink: #2c5aa0;
+    --ray: rgba(255,255,255,.34);
+  }
+  html.navy {
+    --bg1: #123465; --bg2: #0c2850; --bg3: #081c3b;
+    --grid: rgba(150, 200, 255, .10);
+    --ink: #ffffff; --ink-soft: #bcd7f7;
+    --accent: #ffc83d; --accent-deep: #f4a912;
+    --chip-bg: #ffffff14; --chip-bd: #6d97cf; --chip-ink: #e6f1ff;
+    --ray: rgba(140,190,255,.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; height: 400px; overflow: hidden; background: var(--bg2); }
+  #banner {
+    position: relative; width: 1600px; height: 400px; overflow: hidden;
+    font-family: 'Prompt', 'Loma', sans-serif;
+    background:
+      radial-gradient(900px 520px at 78% 55%, var(--bg1) 0%, transparent 70%),
+      linear-gradient(100deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
+  }
+  /* blueprint grid, fading out toward the text side */
+  #banner::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+    -webkit-mask-image: radial-gradient(700px 420px at 76% 55%, #000 0%, transparent 75%);
+            mask-image: radial-gradient(700px 420px at 76% 55%, #000 0%, transparent 75%);
+  }
+  svg.layer { position: absolute; inset: 0; width: 1600px; height: 400px; }
+
+  .text { position: absolute; left: 150px; top: 0; height: 400px; width: 660px;
+          display: flex; flex-direction: column; justify-content: center; }
+  .kicker { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .kicker i { display: block; width: 46px; height: 5px; border-radius: 3px; background: var(--accent); }
+  .kicker span { font-size: 17px; font-weight: 600; letter-spacing: .22em; color: var(--ink-soft); text-transform: uppercase; }
+  h1 { font-size: 76px; line-height: 1.28; font-weight: 700; color: var(--ink); letter-spacing: -.005em; }
+  .code { position: relative; z-index: 0; display: inline-block; align-self: flex-start; font-size: 100px; line-height: 1.02; font-weight: 800;
+          letter-spacing: .02em; color: var(--ink); margin-top: -4px; font-variant-numeric: lining-nums; }
+  .code::after { content: ""; position: absolute; left: -6px; right: -10px; bottom: 6px; height: 34px;
+          background: var(--accent); opacity: .7; border-radius: 6px; z-index: -1; transform: skew(-8deg); }
+  html.navy .code { color: var(--accent); }
+  html.navy .code::after { opacity: .0; }
+  .chip { margin-top: 26px; align-self: flex-start; display: inline-flex; align-items: center; gap: 12px;
+          padding: 9px 22px 9px 10px; border-radius: 999px; background: var(--chip-bg);
+          border: 1.5px solid var(--chip-bd); color: var(--chip-ink); font-size: 24px; font-weight: 600;
+          letter-spacing: .01em; box-shadow: 0 6px 18px rgba(40, 90, 160, .12); }
+  .chip .ic { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; }
+</style>
+</head>
+<body>
+<div id="banner">
+  <!-- background: window-light rays, sun, clouds -->
+  <svg class="layer" id="bg" viewBox="0 0 1600 400"></svg>
+  <!-- isometric BIM diorama -->
+  <svg class="layer" id="scene" viewBox="0 0 1600 400"></svg>
+
+  <div class="text">
+    <div class="kicker"><i></i><span>Assignment Submission</span></div>
+    <h1>ส่งงานรายวิชา</h1>
+    <div class="code">020323110</div>
+    <div class="chip">
+      <span class="ic">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1c3f78" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M12 2.5 21 7.5v9L12 21.5 3 16.5v-9z"/><path d="M12 12.2 3.4 7.6M12 12.2l8.6-4.6M12 12.2v9"/>
+        </svg>
+      </span>
+      Computer Program (BIM)
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const variant = new URLSearchParams(location.search).get('v') === 'navy' ? 'navy' : 'sky';
+  document.documentElement.classList.add(variant);
+  const navy = variant === 'navy';
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs = {}, parent) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  };
+
+  /* ---------- palette ---------- */
+  const C = navy ? {
+    top: '#eaf4ff', left: '#8db9e6', right: '#4f84c2', edge: '#ffffff40',
+    winOff: '#2a5a96', winOn: '#ffd75e', platTop: '#1e4a85', platL: '#163c6e', platR: '#0f2f58',
+    warmTop: '#ffe08a', warmL: '#f7bf45', warmR: '#d99a1d',
+    ghost: '#7fd0ff', crane: '#ffc83d', shadow: 'rgba(0,0,0,.35)', cloud: '#ffffff', sun: '#3f7cc9'
+  } : {
+    top: '#fbfdff', left: '#c4e0f5', right: '#8fbde2', edge: '#ffffff90',
+    winOff: '#eef7ff', winOn: '#ffe7a0', platTop: '#f7fbff', platL: '#d8e9f7', platR: '#b6d3ec',
+    warmTop: '#ffeaa6', warmL: '#ffd262', warmR: '#f0b232',
+    ghost: '#3d8ee0', crane: '#f2a516', shadow: 'rgba(40,90,150,.20)', cloud: '#ffffff', sun: '#ffd96b'
+  };
+
+  /* ---------- background layer ---------- */
+  const bg = document.getElementById('bg');
+  // soft sun
+  el('circle', { cx: 1185, cy: 178, r: 150, fill: C.sun, opacity: navy ? .22 : .55 }, bg);
+  el('circle', { cx: 1185, cy: 178, r: 104, fill: C.sun, opacity: navy ? .26 : .6 }, bg);
+  // window-light rays (echo of the original photo)
+  const rays = el('g', { fill: C.ray || 'var(--ray)' }, bg);
+  [[900, 70], [1060, 46], [1250, 62]].forEach(([x, w]) => {
+    el('polygon', { points: `${x},0 ${x + w},0 ${x + w - 170},400 ${x - 170},400`, fill: 'var(--ray)' }, rays);
+  });
+  // clouds
+  const cloud = (x, y, s, o = 1) => {
+    const g = el('g', { transform: `translate(${x},${y}) scale(${s})`, opacity: o }, bg);
+    [[0, 18, 22], [26, 6, 28], [58, 14, 24], [84, 22, 16], [14, 26, 20], [70, 28, 20]].forEach(([cx, cy, r]) =>
+      el('circle', { cx, cy, r, fill: C.cloud }, g));
+    el('rect', { x: -6, y: 26, width: 104, height: 22, rx: 11, fill: C.cloud }, g);
+  };
+  cloud(905, 46, .8, navy ? .1 : .95);
+  cloud(1440, 70, .62, navy ? .1 : .9);
+  cloud(1420, 318, .5, navy ? .1 : .8);
+  // sparkles / plus marks
+  const plus = (x, y, s, col, o = 1) => {
+    el('path', { d: `M${x - s} ${y}H${x + s}M${x} ${y - s}V${y + s}`, stroke: col, 'stroke-width': 3, 'stroke-linecap': 'round', opacity: o }, bg);
+  };
+  plus(850, 318, 8, navy ? '#7fb0ee' : '#7aaee2', .8);
+  plus(1520, 190, 7, '#ffc83d', .95);
+  plus(985, 120, 6, '#ffc83d', .9);
+  [[1500, 340, 5], [880, 200, 4], [1330, 30, 4]].forEach(([x, y, r]) =>
+    el('circle', { cx: x, cy: y, r, fill: 'none', stroke: navy ? '#7fb0ee' : '#7aaee2', 'stroke-width': 2.5, opacity: .8 }, bg));
+
+  /* ---------- isometric helpers ---------- */
+  const S = 26.5, OX = 1150, OY = 150;           // scale & origin of the iso grid
+  const K = Math.cos(Math.PI / 6), H = .5;
+  const P = (x, y, z) => [OX + (x - y) * K * S, OY + (x + y) * H * S - z * S];
+  const pts = a => a.map(p => p.map(n => n.toFixed(1)).join(',')).join(' ');
+  const scene = document.getElementById('scene');
+
+  const defs = el('defs', {}, scene);
+  const glow = el('linearGradient', { id: 'gwin', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+  el('stop', { offset: 0, 'stop-color': navy ? '#3a74b8' : '#ffffff' }, glow);
+  el('stop', { offset: 1, 'stop-color': navy ? '#1f4f8c' : '#d8ecfb' }, glow);
+  const f = el('filter', { id: 'soft', x: '-20%', y: '-20%', width: '140%', height: '140%' }, defs);
+  el('feGaussianBlur', { stdDeviation: 6 }, f);
+
+  const poly = (arr, fill, extra = {}, parent = scene) =>
+    el('polygon', Object.assign({ points: pts(arr), fill, 'stroke-linejoin': 'round' }, extra), parent);
+  const line = (a, b, attrs, parent = scene) =>
+    el('line', Object.assign({ x1: a[0], y1: a[1], x2: b[0], y2: b[1], 'stroke-linecap': 'round' }, attrs), parent);
+
+  function box(x, y, z, w, d, h, parent = scene, opt = {}) {
+    const g = el('g', {}, parent);
+    const T = opt.top || C.top, L = opt.left || C.left, R = opt.right || C.right;
+    poly([P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x, y + d, z + h)], L, { stroke: C.edge, 'stroke-width': 1 }, g);
+    poly([P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x + w, y, z + h)], R, { stroke: C.edge, 'stroke-width': 1 }, g);
+    poly([P(x, y, z + h), P(x + w, y, z + h), P(x + w, y + d, z + h), P(x, y + d, z + h)], T, { stroke: C.edge, 'stroke-width': 1 }, g);
+    return g;
+  }
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  function windows(x, y, z, w, d, h, nx, nz, ny, g, litChance = .28) {
+    for (let c = 0; c < nx; c++) for (let r = 0; r < nz; r++) {
+      const u0 = x + w * (c + .2) / nx, u1 = x + w * (c + .8) / nx, v0 = z + h * (r + .22) / nz, v1 = z + h * (r + .78) / nz;
+      const lit = rnd() < litChance;
+      poly([P(u0, y + d, v0), P(u1, y + d, v0), P(u1, y + d, v1), P(u0, y + d, v1)], lit ? C.winOn : 'url(#gwin)', { stroke: navy ? '#ffffff30' : '#9cc6e8', 'stroke-width': .8 }, g);
+    }
+    for (let c = 0; c < ny; c++) for (let r = 0; r < nz; r++) {
+      const u0 = y + d * (c + .2) / ny, u1 = y + d * (c + .8) / ny, v0 = z + h * (r + .22) / nz, v1 = z + h * (r + .78) / nz;
+      const lit = rnd() < litChance;
+      poly([P(x + w, u0, v0), P(x + w, u1, v0), P(x + w, u1, v1), P(x + w, u0, v1)], lit ? C.winOn : 'url(#gwin)', { stroke: navy ? '#ffffff30' : '#7fb0da', 'stroke-width': .8, opacity: .92 }, g);
+    }
+  }
+  const WARM = { top: C.warmTop, left: C.warmL, right: C.warmR };
+  const tree = (x, y, s) => {
+    const p = P(x, y, 0);
+    const t = el('g', { transform: `translate(${p[0]},${p[1]}) scale(${s})` }, scene);
+    el('ellipse', { cx: 0, cy: 0, rx: 11, ry: 4.5, fill: C.shadow, opacity: .5 }, t);
+    el('rect', { x: -2.5, y: -16, width: 5, height: 16, rx: 2, fill: navy ? '#b98a2d' : '#d9a441' }, t);
+    el('circle', { cx: 0, cy: -28, r: 14, fill: navy ? '#4fb59a' : '#7ccfb0' }, t);
+    el('circle', { cx: -6, cy: -22, r: 9, fill: navy ? '#3fa086' : '#62bd9c' }, t);
+  };
+
+  /* ---------- platform ---------- */
+  const PW = 9.9, PD = 6.2, PT = .75;
+  const pc = P(PW / 2, PD / 2, -PT);
+  el('ellipse', { cx: pc[0] + 8, cy: pc[1] + 24, rx: 215, ry: 44, fill: C.shadow, filter: 'url(#soft)' }, scene);
+  box(0, 0, -PT, PW, PD, PT, scene, { top: C.platTop, left: C.platL, right: C.platR });
+  for (let i = 1; i < 10; i++) line(P(i * PW / 10, 0, 0), P(i * PW / 10, PD, 0), { stroke: navy ? '#ffffff14' : '#c9def0', 'stroke-width': 1 });
+  for (let j = 1; j < 6; j++) line(P(0, j * PD / 6, 0), P(PW, j * PD / 6, 0), { stroke: navy ? '#ffffff14' : '#c9def0', 'stroke-width': 1 });
+
+  // back-to-front drawing order
+  tree(1.0, 1.0, .9); tree(9.3, .9, .85);
+
+  // small left building
+  let g = box(.7, 2.7, 0, 1.7, 1.9, 2.1);
+  windows(.7, 2.7, 0, 1.7, 1.9, 2.1, 2, 2, 2, g, .35);
+
+  // MAIN building: three stacked blocks
+  g = box(3.0, 1.2, 0, 3.8, 3.4, 3.0);
+  windows(3.0, 1.2, 0, 3.8, 3.4, 3.0, 4, 4, 3, g, .26);
+  g = box(3.55, 1.75, 3.0, 2.7, 2.3, 1.3);
+  windows(3.55, 1.75, 3.0, 2.7, 2.3, 1.3, 3, 2, 2, g, .3);
+  box(4.4, 2.35, 4.3, 1.0, 1.1, .4, scene, WARM);                // roof plant
+
+  /* ---------- BIM ghost floor being lifted into place ---------- */
+  const gx = 3.55, gy = 1.75, gw = 2.7, gd = 2.3, gz = 5.2, gh = .85;
+  const ghost = el('g', {}, scene);
+  const dash = { fill: 'none', stroke: C.ghost, 'stroke-width': 2, 'stroke-dasharray': '6 5', 'stroke-linejoin': 'round' };
+  poly([P(gx, gy + gd, gz), P(gx + gw, gy + gd, gz), P(gx + gw, gy + gd, gz + gh), P(gx, gy + gd, gz + gh)], navy ? '#7fd0ff26' : '#3d8ee022', dash, ghost);
+  poly([P(gx + gw, gy, gz), P(gx + gw, gy + gd, gz), P(gx + gw, gy + gd, gz + gh), P(gx + gw, gy, gz + gh)], navy ? '#7fd0ff36' : '#3d8ee032', dash, ghost);
+  poly([P(gx, gy, gz + gh), P(gx + gw, gy, gz + gh), P(gx + gw, gy + gd, gz + gh), P(gx, gy + gd, gz + gh)], navy ? '#7fd0ff1c' : '#3d8ee018', dash, ghost);
+  [[[gx, gy, gz], [gx + gw, gy, gz]], [[gx, gy, gz], [gx, gy + gd, gz]], [[gx, gy, gz], [gx, gy, gz + gh]]].forEach(([a, b]) =>
+    line(P(...a), P(...b), { stroke: C.ghost, 'stroke-width': 1.4, 'stroke-dasharray': '3 5', opacity: .55 }, ghost));
+  [[gx + gw, gy + gd], [gx, gy + gd], [gx + gw, gy]].forEach(([x, y]) =>
+    line(P(x, y, 4.3), P(x, y, gz), { stroke: C.ghost, 'stroke-width': 1.6, 'stroke-dasharray': '2 6', opacity: .85 }, ghost));
+
+  /* ---------- tower crane (right side, jib reaches over the building) ---------- */
+  const crane = el('g', { stroke: C.crane, fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, scene);
+  const mx = 7.6, my = 2.9, mz = 7.0, off = .55;         // mast legs: (mx,my) and (mx,my-off)
+  [0, -off].forEach(o => line(P(mx, my + o, 0), P(mx, my + o, mz), { 'stroke-width': 3 }, crane));
+  for (let z = 0; z < mz - .5; z += .9) {
+    line(P(mx, my, z), P(mx, my - off, z + .9), { 'stroke-width': 1.5 }, crane);
+    line(P(mx, my - off, z), P(mx, my, z + .9), { 'stroke-width': 1.5, opacity: .55 }, crane);
+    line(P(mx, my, z), P(mx, my - off, z), { 'stroke-width': 1.5 }, crane);
+  }
+  const jy = my - off / 2, jx0 = 3.0, jx1 = 9.0;          // jib spans x = jx0 .. jx1
+  line(P(jx0, jy, mz), P(jx1, jy, mz), { 'stroke-width': 3.4 }, crane);
+  line(P(jx0, jy, mz + .14), P(jx1, jy, mz + .14), { 'stroke-width': 1.3, opacity: .6 }, crane);
+  for (let x = jx0; x < mx - .2; x += .9) {
+    line(P(x, jy, mz), P(x + .45, jy, mz + .55), { 'stroke-width': 1.3 }, crane);
+    line(P(x + .45, jy, mz + .55), P(x + .9, jy, mz), { 'stroke-width': 1.3 }, crane);
+  }
+  line(P(mx, jy, mz), P(mx, jy, mz + 1.5), { 'stroke-width': 2.4 }, crane);
+  line(P(mx, jy, mz + 1.5), P(jx0, jy, mz), { 'stroke-width': 1.3, opacity: .85 }, crane);
+  line(P(mx, jy, mz + 1.5), P(jx1, jy, mz), { 'stroke-width': 1.3, opacity: .85 }, crane);
+  box(jx1 - .55, jy - .3, mz - .55, .7, .6, .55, scene, { top: '#e8eef5', left: '#aebccb', right: '#8798ab' });   // counterweight
+  box(mx - .3, jy - .95, mz - .6, .6, .5, .6, scene, { top: '#ffffff', left: '#dbe9f6', right: '#b5cfe6' });      // cab
+  // cable to the ghost floor
+  const hx = gx + gw / 2, hy = gy + gd / 2, top = gz + gh;
+  const cab = navy ? '#d9e8fa' : '#5f84ad';
+  line(P(hx, jy, mz), P(hx, jy, top + .9), { stroke: cab, 'stroke-width': 1.6 }, scene);
+  line(P(hx, jy, top + .9), P(gx + .25, hy, top), { stroke: cab, 'stroke-width': 1.2 }, scene);
+  line(P(hx, jy, top + .9), P(gx + gw - .25, hy, top), { stroke: cab, 'stroke-width': 1.2 }, scene);
+  el('circle', { cx: P(hx, jy, top + .9)[0], cy: P(hx, jy, top + .9)[1], r: 3.4, fill: C.crane }, scene);
+
+  // warm low building (front right) + trees
+  g = box(8.2, 3.9, 0, 1.5, 1.8, 1.4, scene, WARM);
+  windows(8.2, 3.9, 0, 1.5, 1.8, 1.4, 2, 1, 2, g, .5);
+  tree(9.3, 2.8, .8); tree(6.9, 5.4, .8); tree(5.9, 5.55, .65);
+
+  /* ---------- props on the platform ---------- */
+  const hp = P(.9, 5.5, 0);
+  const hat = el('g', { transform: `translate(${hp[0] - 34},${hp[1] - 41}) scale(.7)` }, scene);
+  el('ellipse', { cx: 50, cy: 60, rx: 58, ry: 8, fill: C.shadow, filter: 'url(#soft)' }, hat);
+  el('path', { d: 'M8 52C8 24 28 8 50 8s42 16 42 44z', fill: '#ffc83d' }, hat);
+  el('path', { d: 'M8 52C8 24 28 8 50 8c-14 6-26 22-26 44z', fill: '#ffe08a', opacity: .75 }, hat);
+  el('rect', { x: 43, y: 4, width: 14, height: 48, rx: 6, fill: '#f4a912' }, hat);
+  el('rect', { x: -2, y: 50, width: 104, height: 13, rx: 6.5, fill: '#f4a912' }, hat);
+  el('rect', { x: -2, y: 50, width: 104, height: 5, rx: 2.5, fill: '#ffd35c' }, hat);
+
+  const rp = P(2.7, 5.7, 0);
+  const roll = el('g', { transform: `translate(${rp[0] - 10},${rp[1] - 22}) scale(.9)` }, scene);
+  el('rect', { x: 0, y: 6, width: 62, height: 20, rx: 10, fill: navy ? '#d7e8fb' : '#ffffff', stroke: navy ? '#9bbfe8' : '#b7d3ec', 'stroke-width': 1.5 }, roll);
+  el('ellipse', { cx: 10, cy: 16, rx: 7, ry: 10, fill: navy ? '#9bbfe8' : '#cfe4f6' }, roll);
+  el('ellipse', { cx: 10, cy: 16, rx: 3, ry: 5, fill: navy ? '#5e8fc9' : '#8fbde2' }, roll);
+  [22, 32, 42].forEach(x => el('line', { x1: x, y1: 12, x2: x + 8, y2: 12, stroke: '#3d8ee0', 'stroke-width': 1.6, 'stroke-linecap': 'round', opacity: .8 }, roll));
+  [22, 36].forEach(x => el('line', { x1: x, y1: 19, x2: x + 12, y2: 19, stroke: '#3d8ee0', 'stroke-width': 1.6, 'stroke-linecap': 'round', opacity: .55 }, roll));
+
+  /* ---------- floating tags ---------- */
+  const tag = (x, y, label, kind) => {
+    const t = el('g', { transform: `translate(${x},${y})` }, scene);
+    const w = 20 + label.length * 11 + 30;
+    el('rect', { x: 0, y: 0, width: w, height: 38, rx: 19, fill: navy ? '#ffffff18' : '#ffffffee', stroke: navy ? '#7fb0ee' : '#b5d3ee', 'stroke-width': 1.5 }, t);
+    el('circle', { cx: 19, cy: 19, r: 11, fill: kind === 'a' ? '#ffc83d' : '#3d8ee0' }, t);
+    if (kind === 'a') el('path', { d: 'M19 11.8 25.2 15.4v7.2L19 26.2l-6.2-3.6v-7.2zM19 19v7M19 19l-6-3.6M19 19l6-3.6', fill: 'none', stroke: '#1c3f78', 'stroke-width': 1.7, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, t);
+    else el('path', { d: 'M13.5 19h11M19 13.5v11', stroke: '#fff', 'stroke-width': 2.4, 'stroke-linecap': 'round' }, t);
+    const tx = el('text', { x: 38, y: 25.5, 'font-family': 'Prompt, sans-serif', 'font-size': 16, 'font-weight': 600, fill: navy ? '#e6f1ff' : '#2c5aa0' }, t);
+    tx.textContent = label;
+  };
+  tag(1356, 142, '3D', 'b');
+  tag(905, 262, 'BIM', 'a');
+})();
+</script>
+</body>
+</html>
