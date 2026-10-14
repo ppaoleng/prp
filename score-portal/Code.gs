@@ -5,7 +5,7 @@
  * ดังนั้นฟังก์ชัน api_* ทุกตัวต้องตรวจเซสชันเอง และตัวช่วยอื่นต้องลงท้ายด้วย _
  */
 
-function doGet() {
+function doGet(e) {
   var boot = { title: '020325201 ADV.STRUCTURAL', subtitle: '', notice: '', published: false, registerVerify: 'name', ready: true };
   try {
     var s = getSettings_();
@@ -17,6 +17,10 @@ function doGet() {
     console.error('doGet settings: ' + e);
     boot.ready = false;
   }
+  // หน้าผู้ดูแล: เปิดได้เฉพาะเมื่อลิงก์มี ?admin=<คีย์ลับ> ที่ถูกต้อง คีย์ผิดจะได้หน้านักศึกษาปกติ (ไม่บอกใบ้)
+  // ตัวหน้าผู้ดูแลยังต้องกรอกรหัสผ่านผู้ดูแลอีกชั้น (ดู AdminApi.gs)
+  var adminKey = e && e.parameter && e.parameter.admin;
+  if (adminKey && checkAdminKey_(adminKey)) { boot.admin = true; boot.adminKey = String(adminKey); }
   var t = HtmlService.createTemplateFromFile('Index');
   t.boot = jsonForScript_(boot);
   return t.evaluate()
@@ -87,19 +91,22 @@ function api_pdf(token) {
     var D = loadClassData_(settings);
     var idx = findStudent_(D, idKey);
     if (idx < 0) return fail_('ไม่พบรหัสนักศึกษาของท่านในชีตคะแนน');
-    var me = D.students[idx];
-
-    var fileId = resolvePdfId_(me, listPdfMap_(settings, false));
-    if (!fileId) fileId = resolvePdfId_(me, listPdfMap_(settings, true)); // รีเฟรชรายการไฟล์หนึ่งครั้ง
-    if (!fileId) return fail_('ยังไม่พบไฟล์ PDF ของท่านในโฟลเดอร์ กรุณาติดต่อผู้สอน');
-
-    var file = DriveApp.getFileById(fileId);
-    if (file.getSize() > CONFIG.MAX_PDF_BYTES) return fail_('ไฟล์ PDF ใหญ่เกินกว่าจะแสดงบนหน้าเว็บ กรุณาติดต่อผู้สอน');
-    audit_(idKey, 'pdf_view', '');
-    return {
-      ok: true,
-      name: me.pdfName || file.getName(),
-      base64: Utilities.base64Encode(file.getBlob().getBytes())
-    };
+    var res = pdfResponse_(D.students[idx], settings);
+    if (res.ok) audit_(idKey, 'pdf_view', '');
+    return res;
   });
+}
+
+/** อ่านไฟล์ PDF ของนักศึกษาจากโฟลเดอร์ -> {ok, name, base64} (ใช้ร่วมกับหน้าผู้ดูแล) */
+function pdfResponse_(me, settings) {
+  var fileId = resolvePdfId_(me, listPdfMap_(settings, false));
+  if (!fileId) fileId = resolvePdfId_(me, listPdfMap_(settings, true)); // รีเฟรชรายการไฟล์หนึ่งครั้ง
+  if (!fileId) return fail_('ยังไม่พบไฟล์ PDF ในโฟลเดอร์ กรุณาติดต่อผู้สอน');
+  var file = DriveApp.getFileById(fileId);
+  if (file.getSize() > CONFIG.MAX_PDF_BYTES) return fail_('ไฟล์ PDF ใหญ่เกินกว่าจะแสดงบนหน้าเว็บ กรุณาติดต่อผู้สอน');
+  return {
+    ok: true,
+    name: me.pdfName || file.getName(),
+    base64: Utilities.base64Encode(file.getBlob().getBytes())
+  };
 }

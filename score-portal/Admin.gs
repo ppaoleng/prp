@@ -14,6 +14,10 @@ function onOpen() {
       .addItem('เปิดประกาศผล', 'adminPublishOn')
       .addItem('ปิดประกาศผล (ล็อก)', 'adminPublishOff')
       .addSeparator()
+      .addItem('ตั้งรหัสผ่านผู้ดูแล (หน้าดูข้อมูลทุกคน)', 'adminSetPassword')
+      .addItem('แสดงลิงก์ผู้ดูแล', 'adminShowLink')
+      .addItem('สร้างลิงก์ผู้ดูแลใหม่ (ถ้าลิงก์รั่ว)', 'adminRotateKey')
+      .addSeparator()
       .addItem('สร้างรหัสยืนยันรายคน (โหมด code)', 'adminGenerateCodes')
       .addItem('รีเซ็ตรหัสผ่านนักศึกษา', 'adminResetPassword')
       .addItem('ล้างแคช (หลังแก้ชีตคะแนน)', 'adminClearCache')
@@ -50,6 +54,7 @@ function adminSetup() {
   var props = PropertiesService.getScriptProperties();
   props.setProperty('DB_ID', ss.getId());
   if (!props.getProperty('PEPPER')) props.setProperty('PEPPER', randomHex_(32));
+  if (!props.getProperty('ADMIN_KEY')) props.setProperty('ADMIN_KEY', randomHex_(16)); // คีย์ลับในลิงก์ผู้ดูแล
 
   var settings = ensureTab_(ss, CONFIG.TAB_SETTINGS, ['key', 'value', 'คำอธิบาย']);
   var existing = {};
@@ -196,6 +201,43 @@ function adminGenerateCodes() {
     added++;
   });
   alert_('สร้างรหัสยืนยันใหม่ ' + added + ' รหัส (แท็บ Codes)\nแจกรหัสให้นักศึกษาแต่ละคนผ่านช่องทางส่วนตัว และตั้ง Settings > register_verify = code');
+}
+
+/** ลิงก์หน้าผู้ดูแล (ถ้า Deploy แล้วจะได้ URL เต็ม ไม่งั้นแสดงเฉพาะส่วนท้าย) */
+function adminLink_() {
+  var key = getAdminKey_();
+  if (!key) throw new Error('ยังไม่ได้ตั้งค่า: เมนู ตั้งค่าเริ่มต้น');
+  var base = '';
+  try { base = ScriptApp.getService().getUrl() || ''; } catch (e) { /* ยังไม่ได้ Deploy */ }
+  return base ? base + '?admin=' + key : '(URL เว็บแอป)/exec?admin=' + key;
+}
+
+function adminSetPassword() {
+  assertAdmin_();
+  var ui = SpreadsheetApp.getUi();
+  var resp = ui.prompt('ตั้งรหัสผ่านผู้ดูแล',
+    'รหัสผ่านกลางสำหรับหน้าผู้ดูแล (อย่างน้อย 4 ตัวอักษร)\nใช้ได้เฉพาะผู้ที่มีลิงก์ผู้ดูแล และล็อก 15 นาทีเมื่อกรอกผิด 5 ครั้งติด',
+    ui.ButtonSet.OK_CANCEL);
+  if (resp.getSelectedButton() !== ui.Button.OK) return;
+  var pw = resp.getResponseText();
+  var err = setAdminPassword_(pw);
+  if (err) return alert_(err);
+  var weak = pw.length < 8 || /^\d+$/.test(pw);
+  alert_('ตั้งรหัสผ่านผู้ดูแลแล้ว (เซสชันผู้ดูแลเดิมถูกเพิกถอน)\n\nลิงก์ผู้ดูแล:\n' + adminLink_() +
+    (weak ? '\n\n⚠ รหัสนี้สั้น/เดาง่าย ความปลอดภัยพึ่งลิงก์ลับเป็นหลัก — อย่าส่งลิงก์ผู้ดูแลให้ใคร และถ้าลิงก์รั่วให้สร้างลิงก์ใหม่' : ''));
+}
+
+function adminShowLink() {
+  assertAdmin_();
+  alert_('ลิงก์ผู้ดูแล (ห้ามแชร์ให้นักศึกษา):\n' + adminLink_() +
+    (adminProps_().getProperty('ADMIN_HASH') ? '' : '\n\nยังไม่ได้ตั้งรหัสผ่านผู้ดูแล — เมนู ตั้งรหัสผ่านผู้ดูแล'));
+}
+
+function adminRotateKey() {
+  assertAdmin_();
+  adminProps_().setProperty('ADMIN_KEY', randomHex_(16));
+  adminProps_().setProperty('ADMIN_REVOKED_AT', String(Date.now()));
+  alert_('สร้างลิงก์ผู้ดูแลใหม่แล้ว (ลิงก์เดิมและเซสชันผู้ดูแลเดิมใช้ไม่ได้)\n\n' + adminLink_());
 }
 
 function resetPasswordFor_(idKey) {

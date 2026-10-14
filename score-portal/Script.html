@@ -7,7 +7,8 @@
   var tip = document.getElementById('tip');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var mem = {};
-  var state = { token: null, authTab: 'login', course: null, notice: BOOT.notice || '', histResize: null, pdf: null };
+  var state = { token: null, authTab: 'login', course: null, notice: BOOT.notice || '', histResize: null, pdf: null,
+    admin: null, adminView: null, adminData: null, adminUi: { key: 'seq', dir: 1, q: '' } };
 
   /* ---------- ตัวช่วย ---------- */
 
@@ -76,12 +77,18 @@
     applyTheme(t === 'light' || t === 'dark' ? t : 'dark');
   })();
 
-  function topbar(user) {
+  function YOU() { return state.adminView ? 'นักศึกษา' : 'คุณ'; }
+
+  function topbar(user, opts) {
+    opts = opts || {};
     var dark = currentTheme() === 'dark';
     return '<header class="topbar">' +
       '<div class="brand"><div class="logo">' + ICON.logo + '</div><div style="min-width:0"><b>ประกาศคะแนน</b><span>' + esc(BOOT.title || '') + (BOOT.subtitle ? ' · ' + esc(BOOT.subtitle) : '') + '</span></div></div>' +
       '<button class="icon-btn" id="themeBtn" aria-label="สลับธีมสว่าง/มืด" title="สลับธีม">' + (dark ? ICON.sun : ICON.moon) + '</button>' +
-      (user ? '<div class="chip-user"><div class="who"><b>' + esc(user.name) + '</b><span>' + esc(user.id) + '</span></div>' +
+      (opts.back ? '<button class="btn btn-ghost" id="backBtn">← รายชื่อทั้งหมด</button>' : '') +
+      (opts.admin ? '<div class="chip-user"><div class="who"><b>ผู้ดูแลระบบ</b><span>ดูข้อมูลทุกคน</span></div>' +
+        '<button class="icon-btn" id="logoutBtn" aria-label="ออกจากระบบ" title="ออกจากระบบ">' + ICON.out + '</button></div>' :
+        user ? '<div class="chip-user"><div class="who"><b>' + esc(user.name) + '</b><span>' + esc(user.id) + '</span></div>' +
         '<button class="icon-btn" id="logoutBtn" aria-label="ออกจากระบบ" title="ออกจากระบบ">' + ICON.out + '</button></div>' : '') +
       '</header>';
   }
@@ -93,7 +100,9 @@
       redrawHist();
     });
     var lb = document.getElementById('logoutBtn');
-    if (lb) lb.addEventListener('click', logout);
+    if (lb) lb.addEventListener('click', state.admin ? adminLogout : logout);
+    var bb = document.getElementById('backBtn');
+    if (bb) bb.addEventListener('click', function () { state.adminView = null; renderAdminOverview(state.adminData); });
   }
 
   /* ---------- Tooltip ---------- */
@@ -188,11 +197,7 @@
     return Math.min(4, s);
   }
 
-  function wireAuth() {
-    var tabs = app.querySelectorAll('[data-tab]');
-    Array.prototype.forEach.call(tabs, function (b) {
-      b.addEventListener('click', function () { state.authTab = b.getAttribute('data-tab'); renderAuth(); });
-    });
+  function wireEyes() {
     Array.prototype.forEach.call(app.querySelectorAll('[data-eye]'), function (b) {
       b.addEventListener('click', function () {
         var inp = document.getElementById(b.getAttribute('data-eye'));
@@ -201,6 +206,14 @@
         b.innerHTML = show ? ICON.eyeOff : ICON.eye;
       });
     });
+  }
+
+  function wireAuth() {
+    var tabs = app.querySelectorAll('[data-tab]');
+    Array.prototype.forEach.call(tabs, function (b) {
+      b.addEventListener('click', function () { state.authTab = b.getAttribute('data-tab'); renderAuth(); });
+    });
+    wireEyes();
     var pw = document.getElementById('f_pw'), st = document.getElementById('strength');
     if (pw && st) pw.addEventListener('input', function () { st.setAttribute('data-s', String(strengthScore(pw.value))); });
 
@@ -302,7 +315,7 @@
   }
 
   function tile(c, i) {
-    var tipText = c.label + '\nคุณ ' + fmt(c.score) + ' / ' + fmt(c.max) + '\nค่าเฉลี่ยห้อง ' + fmt(c.mean) + '\nสูงสุด ' + fmt(c.best) + ' · ต่ำสุด ' + fmt(c.low);
+    var tipText = c.label + '\n' + YOU() + ' ' + fmt(c.score) + ' / ' + fmt(c.max) + '\nค่าเฉลี่ยห้อง ' + fmt(c.mean) + '\nสูงสุด ' + fmt(c.best) + ' · ต่ำสุด ' + fmt(c.low);
     return '<div class="card tile rise" style="--i:' + (3 + i) + '">' +
       '<div class="lab">' + esc(c.label) + '</div>' +
       '<div class="val"><b data-count="' + (c.score == null ? '' : c.score) + '">' + (c.score == null ? '–' : '0') + '</b><span>/ ' + fmt(c.max) + '</span></div>' +
@@ -320,7 +333,7 @@
     var rankFrac = t.of > 1 ? 1 - (t.rank - 1) / (t.of - 1) : 0.5;
     var topPct = t.rank && t.of ? Math.ceil((t.rank / t.of) * 100) : null;
 
-    var h = topbar(me);
+    var h = state.adminView ? topbar(null, { admin: true, back: true }) + adminBar(state.adminView) : topbar(me);
     h += '<main>';
     h += '<div class="hero">';
 
@@ -340,7 +353,7 @@
 
     h += '<section class="card rise" style="--i:1"><div class="kicker">อันดับในห้อง</div>' +
       '<div class="rank-fig"><b data-count="' + (t.rank == null ? '' : t.rank) + '">' + (t.rank == null ? '–' : '0') + '</b><span>จาก ' + fmt(t.of, 0) + ' คน' + (t.ties ? ' · เสมอกับอีก ' + t.ties + ' คน' : '') + '</span></div>' +
-      '<div class="pos" role="img" aria-label="ตำแหน่งของคุณในห้อง"><i style="left:0%" data-left="' + (rankFrac * 100).toFixed(1) + '"></i></div>' +
+      '<div class="pos" role="img" aria-label="ตำแหน่งในห้อง"><i style="left:0%" data-left="' + (rankFrac * 100).toFixed(1) + '"></i></div>' +
       '<div class="pos-ends"><span>ท้ายตาราง</span><span>สูงสุดของห้อง</span></div>' +
       '<p class="lead" style="margin-top:14px">' +
         (t.percentAbove != null ? 'สูงกว่าเพื่อน <b>' + t.percentAbove + '%</b> ของห้อง' : 'ห้องนี้มีผู้สอบคนเดียว') +
@@ -353,7 +366,7 @@
     h += '</div>';
 
     h += '<div class="tiles">' + d.components.concat([d.written]).map(tile).join('') + '</div>';
-    h += '<div class="legend" style="margin-top:10px"><span><i class="sw"></i>คะแนนของคุณ</span><span><i class="sw tick"></i>ค่าเฉลี่ยของห้อง</span></div>';
+    h += '<div class="legend" style="margin-top:10px"><span><i class="sw"></i>คะแนนของ' + YOU() + '</span><span><i class="sw tick"></i>ค่าเฉลี่ยของห้อง</span></div>';
 
     if (d.distribution || d.leaderboard) {
       h += '<div class="two">';
@@ -361,14 +374,14 @@
         h += '<section class="card rise" style="--i:8"><div class="card-head"><div><h2>การกระจายคะแนนของห้อง</h2>' +
           '<div class="sub">จำนวนนักศึกษาในแต่ละช่วงคะแนนรวม (ช่วงละ ' + d.distribution.width + ' คะแนน)</div></div>' +
           '<div class="pdf-bar"><button class="btn btn-ghost" id="histTbl" aria-pressed="false">ดูเป็นตาราง</button></div></div>' +
-          '<div class="legend" style="margin-bottom:6px"><span><i class="sw"></i>ช่วงคะแนนของคุณ</span><span><i class="sw mut"></i>ช่วงอื่น</span></div>' +
+          '<div class="legend" style="margin-bottom:6px"><span><i class="sw"></i>' + (d.distribution.you >= 0 ? 'ช่วงคะแนนของ' + YOU() : 'จำนวนนักศึกษา') + '</span><span><i class="sw mut"></i>ช่วงอื่น</span></div>' +
           '<div class="chart" id="hist"></div><div id="histTable" hidden></div></section>';
       }
       if (d.leaderboard) {
         h += '<section class="card rise" style="--i:9"><div class="card-head"><div><h2>อันดับของห้อง</h2><div class="sub">เรียงตามคะแนนรวม · ไม่แสดงชื่อผู้อื่น</div></div></div>' +
           '<ol class="lb">' + d.leaderboard.map(function (r) {
             return '<li class="' + (r.you ? 'me' : '') + '"><span class="rk">' + r.rank + '</span><span class="bar"><i style="width:' + pct(r.score, d.total.max).toFixed(1) + '%"></i></span>' +
-              '<span class="sc">' + fmt(r.score) + (r.you ? '<span class="tag">คุณ</span>' : '') + '</span></li>';
+              '<span class="sc">' + fmt(r.score) + (r.you ? '<span class="tag">' + YOU() + '</span>' : '') + '</span></li>';
           }).join('') + '</ol></section>';
       }
       h += '</div>';
@@ -381,7 +394,7 @@
         d.feedback.map(function (f) { return '<li><span class="sc">' + esc(f.scope) + '</span><div>' + esc(f.text) + '</div></li>'; }).join('') + '</ul></section>';
     }
     if (d.hasPdf) {
-      h += '<section class="card section rise" style="--i:13" id="pdfCard"><div class="card-head"><div><h2>กระดาษคำตอบที่ตรวจแล้ว</h2><div class="sub" id="pdfName">ไฟล์ PDF ของคุณ</div></div>' +
+      h += '<section class="card section rise" style="--i:13" id="pdfCard"><div class="card-head"><div><h2>กระดาษคำตอบที่ตรวจแล้ว</h2><div class="sub" id="pdfName">ไฟล์ PDF ของ' + YOU() + '</div></div>' +
         '<div class="pdf-bar" id="pdfBar" hidden><button class="btn btn-ghost" id="zOut" aria-label="ย่อ">−</button><span class="zoom" id="zVal">100%</span>' +
         '<button class="btn btn-ghost" id="zIn" aria-label="ขยาย">+</button><button class="btn btn-ghost" id="dlBtn">' + ICON.dl.replace('<svg', '<svg width="15" height="15"') + ' ดาวน์โหลด</button></div></div>' +
         '<div class="pdf-stage" id="pdfStage"><div class="sk" style="height:300px;width:100%"></div></div></section>';
@@ -416,7 +429,7 @@
       '<div class="pdf-bar"><button class="btn btn-ghost" id="mcqTbl" aria-pressed="false">ดูเป็นตาราง</button></div></div>' +
       '<div class="mcq-wrap"><div>' +
       '<div class="chips" id="mcqChips">' + m.items.map(function (i) {
-        var tipText = 'ข้อ ' + i.no + '\nคุณตอบ ' + (i.answer || 'ไม่ตอบ') + ' · เฉลย ' + (i.key || '–') + '\nคะแนนข้อนี้ ' + signed(i.points, 0) +
+        var tipText = 'ข้อ ' + i.no + '\n' + YOU() + 'ตอบ ' + (i.answer || 'ไม่ตอบ') + ' · เฉลย ' + (i.key || '–') + '\nคะแนนข้อนี้ ' + signed(i.points, 0) +
           (i.classCorrectPct != null ? '\nเพื่อนในห้องตอบถูก ' + i.classCorrectPct + '%' : '');
         return '<button class="q ' + i.result + '" data-tip="' + esc(tipText) + '" aria-label="ข้อ ' + i.no + ' ' + RESULT_TH[i.result] + '">' +
           '<span class="n"><span class="nn">ข้อ </span>' + i.no + '</span>' + '<span class="g">' + GLYPH[i.result] + '</span>' +
@@ -446,7 +459,7 @@
       var t = document.getElementById('mcqTable');
       t.hidden = !on;
       if (on && !t.innerHTML) {
-        t.innerHTML = '<table class="tbl"><thead><tr><th>ข้อ</th><th>คุณตอบ</th><th>เฉลย</th><th>ผล</th><th class="num">คะแนน</th><th class="num">ห้องตอบถูก</th></tr></thead><tbody>' +
+        t.innerHTML = '<table class="tbl"><thead><tr><th>ข้อ</th><th>' + YOU() + 'ตอบ</th><th>เฉลย</th><th>ผล</th><th class="num">คะแนน</th><th class="num">ห้องตอบถูก</th></tr></thead><tbody>' +
           m.items.map(function (i) {
             return '<tr><td>' + i.no + '</td><td>' + esc(i.answer || '–') + '</td><td>' + esc(i.key || '–') + '</td><td>' + RESULT_TH[i.result] + '</td><td class="num">' +
               signed(i.points, 0) + '</td><td class="num">' + (i.classCorrectPct == null ? '–' : i.classCorrectPct + '%') + '</td></tr>';
@@ -465,7 +478,7 @@
           '<span class="s">' + fmt(q.score) + ' <span>/ ' + fmt(q.max) + '</span></span>' + meter(q.score, q.max, q.classMean, q.label + '\nเฉลี่ยห้อง ' + fmt(q.classMean)) + '</summary>' +
           '<div class="rub">' + q.items.map(function (it) {
             return '<div class="r"><div class="l">' + esc(it.label) + '<small class="avg">เฉลี่ยห้อง ' + fmt(it.classMean) + '</small></div>' +
-              meter(it.score, it.max, it.classMean, esc(it.label) + '\nคุณ ' + fmt(it.score) + ' / ' + fmt(it.max) + '\nเฉลี่ยห้อง ' + fmt(it.classMean)) +
+              meter(it.score, it.max, it.classMean, esc(it.label) + '\n' + YOU() + ' ' + fmt(it.score) + ' / ' + fmt(it.max) + '\nเฉลี่ยห้อง ' + fmt(it.classMean)) +
               '<div class="v">' + fmt(it.score) + '<small> / ' + fmt(it.max) + '</small></div></div>';
           }).join('') + '</div></details>';
       }).join('') + '</section>';
@@ -516,7 +529,7 @@
       if (on && !t.innerHTML) {
         t.innerHTML = '<table class="tbl"><thead><tr><th>ช่วงคะแนนรวม</th><th class="num">จำนวนนักศึกษา</th><th></th></tr></thead><tbody>' +
           histCtx.dist.bins.map(function (b, i) {
-            return '<tr class="' + (i === histCtx.dist.you ? 'me' : '') + '"><td>' + fmt(b.from, 0) + ' – ' + fmt(b.to, 0) + '</td><td class="num">' + b.count + '</td><td>' + (i === histCtx.dist.you ? 'ช่วงของคุณ' : '') + '</td></tr>';
+            return '<tr class="' + (i === histCtx.dist.you ? 'me' : '') + '"><td>' + fmt(b.from, 0) + ' – ' + fmt(b.to, 0) + '</td><td class="num">' + b.count + '</td><td>' + (i === histCtx.dist.you ? 'ช่วงของ' + YOU() : '') + '</td></tr>';
           }).join('') + '</tbody></table>';
       }
     });
@@ -550,11 +563,11 @@
     bins.forEach(function (b, i) {
       var x0 = m.l + band * i, bx = x0 + (band - bw) / 2, h = (b.count / ymax) * ih, by = m.t + ih - h;
       var you = i === dist.you;
-      var tipText = fmt(b.from, 0) + ' – ' + fmt(b.to, 0) + ' คะแนน\n' + b.count + ' คน' + (you ? '\nรวมคุณ' : '');
+      var tipText = fmt(b.from, 0) + ' – ' + fmt(b.to, 0) + ' คะแนน\n' + b.count + ' คน' + (you ? '\nรวม' + YOU() : '');
       s += '<g tabindex="0" class="b" data-tip="' + esc(tipText) + '" aria-label="' + esc(tipText.replace(/\n/g, ' ')) + '">' +
         '<rect class="band" x="' + x0 + '" y="' + m.t + '" width="' + band + '" height="' + ih + '" rx="6"/>' +
         (b.count > 0 ? '<path d="' + barPath(bx, by, bw, h) + '" style="fill:' + (you ? 'var(--accent)' : 'var(--bar-muted)') + '"/>' : '') +
-        (you ? '<text class="you-tag" x="' + (bx + bw / 2) + '" y="' + (by - 9) + '">คุณ</text>' : '') +
+        (you ? '<text class="you-tag" x="' + (bx + bw / 2) + '" y="' + (by - 9) + '">' + YOU() + '</text>' : '') +
         '<rect class="hit" x="' + x0 + '" y="' + m.t + '" width="' + band + '" height="' + ih + '"/></g>';
     });
     var every = band < 38 ? 2 : 1;
@@ -627,12 +640,18 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
   }
 
+  function pdfScope() { return state.adminView ? 'a:' + state.adminView.idKey : 't:' + state.token; }
+
   function loadPdf() {
-    var token = state.token;
-    callApi('api_pdf', token).then(function (r) {
-      if (token !== state.token) return;
+    var scope = pdfScope();
+    var req = state.adminView ? callApi('api_adminPdf', state.admin.token, state.adminView.idKey) : callApi('api_pdf', state.token);
+    req.then(function (r) {
+      if (scope !== pdfScope()) return;
       if (!r || !r.ok) {
-        if (r && r.expired) { clearSession(); return renderAuth('เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง', 'info'); }
+        if (r && r.expired) {
+          if (state.adminView) return adminExpired();
+          clearSession(); return renderAuth('เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง', 'info');
+        }
         return pdfError((r && r.error) || NET_ERR);
       }
       var bytes = b64ToBytes(r.base64);
@@ -710,10 +729,246 @@
     document.getElementById('dlBtn').onclick = function () { downloadBytes(bytes, name); };
   }
 
+  /* ---------- ผู้ดูแล: ดูข้อมูลทุกคน ---------- */
+
+  function badge(kind, glyph, text) {
+    return '<span class="badge ' + kind + '">' + glyph + esc(text) + '</span>';
+  }
+
+  function adminBar(v) {
+    return '<div class="adminbar rise"><span class="badge adm">โหมดผู้ดูแล</span>' +
+      '<span>กำลังดู <b>' + esc(v.name) + '</b> · ' + esc(v.id) + '</span>' +
+      (v.registered ? badge('ok', ICON.check, 'ลงทะเบียนแล้ว') : badge('', ICON.dash, 'ยังไม่ลงทะเบียน')) +
+      (v.published ? badge('ok', ICON.check, 'ประกาศผลแล้ว') : badge('warn', ICON.lock, 'ยังไม่ประกาศผล (นักศึกษายังไม่เห็น)')) + '</div>';
+  }
+
+  function adminExpired() {
+    state.admin = null; state.adminView = null; store.del('sp_atoken');
+    renderAdminAuth('เซสชันผู้ดูแลหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง', 'info');
+  }
+
+  function adminLogout() {
+    var t = state.admin && state.admin.token;
+    state.admin = null; state.adminView = null; state.adminData = null; store.del('sp_atoken');
+    if (t) callApi('api_adminLogout', t).catch(function () { /* ไม่เป็นไร */ });
+    renderAdminAuth('ออกจากระบบแล้ว', 'ok');
+  }
+
+  function renderAdminAuth(msg, kind) {
+    app.innerHTML = topbar(null) +
+      '<main class="card locked rise"><div class="lock">' + ICON.shield + '</div><h2>หน้าผู้ดูแลระบบ</h2>' +
+      '<p>สำหรับผู้สอนเท่านั้น — ดูคะแนนและกระดาษคำตอบของนักศึกษาทุกคน</p>' +
+      '<div style="text-align:left;margin-top:20px"><div id="msg" role="alert">' +
+      (msg ? '<div class="alert alert-' + (kind || 'err') + '">' + ICON.alert + '<div>' + esc(msg) + '</div></div>' : '') + '</div>' +
+      '<form id="admForm" novalidate>' + field('f_apw', 'รหัสผ่านผู้ดูแล', 'password', { ac: 'current-password' }) +
+      '<button class="btn btn-primary" id="submitBtn" type="submit" style="width:100%">เข้าสู่ระบบผู้ดูแล</button></form></div></main>';
+    wireTopbar();
+    wireEyes();
+    document.getElementById('admForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var pw = document.getElementById('f_apw').value;
+      if (!pw) return setMsg('กรุณากรอกรหัสผ่านผู้ดูแล');
+      busy(true);
+      callApi('api_adminLogin', BOOT.adminKey, pw).then(function (r) {
+        busy(false);
+        if (!r || !r.ok) return setMsg((r && r.error) || NET_ERR);
+        state.admin = { token: r.token };
+        store.set('sp_atoken', r.token);
+        loadAdminOverview();
+      }).catch(function () { busy(false); setMsg(NET_ERR); });
+    });
+    var f = document.getElementById('f_apw'); if (f) f.focus();
+  }
+
+  function renderAdminFatal(msg) {
+    app.innerHTML = topbar(null, { admin: true }) +
+      '<div class="card locked rise"><div class="lock">' + ICON.alert + '</div><h2>ไม่สามารถแสดงผลได้</h2><p>' + esc(msg) + '</p>' +
+      '<div style="margin-top:18px"><button class="btn btn-primary" id="retry">ลองอีกครั้ง</button></div></div>';
+    wireTopbar();
+    document.getElementById('retry').addEventListener('click', loadAdminOverview);
+  }
+
+  function loadAdminOverview() {
+    renderLoading();
+    callApi('api_adminOverview', state.admin.token).then(function (r) {
+      if (!r || !r.ok) {
+        if (r && r.expired) return adminExpired();
+        return renderAdminFatal((r && r.error) || NET_ERR);
+      }
+      renderAdminOverview(r);
+    }).catch(function () { renderAdminFatal(NET_ERR); });
+  }
+
+  var ADM_COLS = [
+    { k: 'seq', t: 'ลำดับ', num: true }, { k: 'id', t: 'รหัสนักศึกษา' }, { k: 'name', t: 'ชื่อ-สกุล' },
+    { k: 'mcq', t: 'ปรนัย', num: true }, { k: 'q1', t: 'อัตนัย 1', num: true }, { k: 'q2', t: 'อัตนัย 2', num: true },
+    { k: 'q3', t: 'อัตนัย 3', num: true }, { k: 'written', t: 'อัตนัยรวม', num: true },
+    { k: 'total', t: 'รวม', num: true }, { k: 'rank', t: 'อันดับ', num: true },
+    { k: 'registered', t: 'ลงทะเบียน' }, { k: 'pdf', t: 'PDF' }
+  ];
+
+  function renderAdminOverview(o, msg) {
+    state.adminData = o; state.adminView = null;
+    var st = o.stats, n = o.rows.length;
+    var noPdf = o.rows.filter(function (r) { return r.pdf === false; }).length;
+    var warns = o.warnings || [];
+    var h = topbar(null, { admin: true }) + '<main>';
+    if (msg) h += '<div class="alert alert-err">' + ICON.alert + '<div>' + esc(msg) + '</div></div>';
+
+    h += '<div class="hero adm">' +
+      '<section class="card rise" style="--i:0"><div class="kicker">สถานะการประกาศ</div>' +
+        '<div style="margin:12px 0 10px">' + (o.published ? badge('ok', ICON.check, 'เปิดประกาศผลแล้ว') : badge('warn', ICON.lock, 'ยังล็อกอยู่ — นักศึกษายังไม่เห็นคะแนน')) + '</div>' +
+        '<p class="lead">คะแนนรวมที่ใช้จัดอันดับ: <b>' + esc(o.totalNote || 'ตามที่ข้อสอบกำหนด') + '</b></p>' +
+        '<p class="lead" style="margin-top:8px;font-size:13px">เปิด/ปิดประกาศผลที่เมนู Score Portal ในชีตฐานข้อมูล</p></section>' +
+      '<section class="card rise" style="--i:1"><div class="kicker">การลงทะเบียนของนักศึกษา</div>' +
+        '<div class="rank-fig"><b class="bigfig" data-count="' + o.registered + '">0</b><span>จาก ' + n + ' คน</span></div>' +
+        meter(o.registered, n, null, null) +
+        '<p class="lead" style="margin-top:12px">ยังไม่ลงทะเบียน <b>' + (n - o.registered) + '</b> คน</p></section>' +
+      '<section class="card rise" style="--i:2"><div class="kicker">ตรวจข้อมูล</div>' +
+        '<div style="margin:12px 0 10px;display:flex;gap:8px;flex-wrap:wrap">' +
+          (noPdf ? badge('bad', ICON.x, 'ไม่พบ PDF ' + noPdf + ' คน') : badge('ok', ICON.check, 'PDF ครบทุกคน')) +
+          (warns.length ? badge('warn', ICON.alert, 'คำเตือน ' + warns.length + ' ข้อ') : badge('ok', ICON.check, 'ไม่มีคำเตือน')) + '</div>' +
+        (warns.length ? '<details class="wq" style="margin-top:0"><summary style="padding:10px 12px"><span class="t">' + ICON.chev + 'ดูคำเตือน</span></summary><div class="rub"><ul class="fb">' +
+          warns.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul></div></details>' : '') +
+      '</section></div>';
+
+    h += '<div class="two"><section class="card rise" style="--i:3"><div class="card-head"><div><h2>การกระจายคะแนนของห้อง</h2>' +
+      '<div class="sub">จำนวนนักศึกษาในแต่ละช่วงคะแนนรวม (ช่วงละ ' + o.distribution.width + ' คะแนน)</div></div>' +
+      '<div class="pdf-bar"><button class="btn btn-ghost" id="histTbl" aria-pressed="false">ดูเป็นตาราง</button></div></div>' +
+      '<div class="chart" id="hist"></div><div id="histTable" hidden></div></section>' +
+      '<section class="card rise" style="--i:4"><div class="kicker">สถิติทั้งห้อง</div><div class="stats">' +
+      [['ค่าเฉลี่ย', st.mean], ['มัธยฐาน', st.median], ['สูงสุด', st.max], ['ต่ำสุด', st.min], ['ส่วนเบี่ยงเบนมาตรฐาน', st.sd], ['ผู้เข้าสอบ', st.n]]
+        .map(function (x) { return '<div class="stat"><span>' + x[0] + '</span><b>' + (x[0] === 'ผู้เข้าสอบ' ? fmt(x[1], 0) + ' คน' : fmt(x[1])) + '</b></div>'; }).join('') +
+      '</div></section></div>';
+
+    h += '<section class="card section rise" style="--i:5"><div class="card-head"><div><h2>รายชื่อนักศึกษา <span id="admCount" style="color:var(--muted);font-weight:400"></span></h2>' +
+      '<div class="sub">คลิกแถวเพื่อดูหน้าของนักศึกษาคนนั้นเหมือนที่เจ้าตัวเห็น (รวม PDF) · คลิกหัวคอลัมน์เพื่อเรียง</div></div>' +
+      '<div class="tools"><input class="input" id="admQ" type="search" placeholder="ค้นหาชื่อ หรือรหัสนักศึกษา" aria-label="ค้นหานักศึกษา" autocomplete="off">' +
+      '<button class="btn btn-ghost" id="admCsv">ส่งออก CSV</button><button class="btn btn-ghost" id="admRefresh">รีเฟรช</button></div></div>' +
+      '<div class="tbl-wrap"><table class="tbl" id="admTbl"><thead><tr>' +
+      ADM_COLS.map(function (c) { return '<th scope="col" data-sort="' + c.k + '"' + (c.num ? ' class="num"' : '') + ' tabindex="0">' + c.t + '<span class="si"></span></th>'; }).join('') +
+      '</tr></thead><tbody id="admBody"></tbody></table></div>' +
+      '<p class="fine" style="text-align:left">ข้อมูลคะแนนถูกแคชไว้ประมาณ 5 นาที ถ้าเพิ่งแก้ชีตให้ใช้เมนู ล้างแคช แล้วกดรีเฟรช</p></section>';
+    h += '</main><p class="foot">ข้อมูล ณ ' + esc(new Date(o.builtAt).toLocaleString('th-TH')) + '</p>';
+
+    app.innerHTML = h;
+    wireTopbar();
+    animate(app);
+    setupHist({ distribution: o.distribution });
+
+    var q = document.getElementById('admQ');
+    q.value = state.adminUi.q;
+    q.addEventListener('input', function () { state.adminUi.q = q.value; renderAdminRows(); });
+    q.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { var rows = adminRows(); if (rows.length === 1) openStudent(rows[0].idKey); }
+    });
+    document.getElementById('admRefresh').addEventListener('click', loadAdminOverview);
+    document.getElementById('admCsv').addEventListener('click', function () { exportCsv(adminRows()); });
+    var thead = document.querySelector('#admTbl thead');
+    function sortBy(th) {
+      if (!th) return;
+      var k = th.getAttribute('data-sort'), u = state.adminUi;
+      if (u.key === k) u.dir = -u.dir; else { u.key = k; u.dir = 1; }
+      renderAdminRows();
+    }
+    thead.addEventListener('click', function (e) { sortBy(e.target.closest('th')); });
+    thead.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sortBy(e.target.closest('th')); } });
+    var body = document.getElementById('admBody');
+    body.addEventListener('click', function (e) { var tr = e.target.closest('tr[data-id]'); if (tr) openStudent(tr.getAttribute('data-id')); });
+    body.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      var tr = e.target.closest('tr[data-id]'); if (tr) openStudent(tr.getAttribute('data-id'));
+    });
+    renderAdminRows();
+  }
+
+  function adminRows() {
+    var u = state.adminUi, rows = state.adminData.rows;
+    var q = u.q.trim().toLowerCase().replace(/\s+/g, ''), qd = u.q.replace(/\D/g, '');
+    if (q) {
+      rows = rows.filter(function (r) {
+        return r.name.toLowerCase().replace(/\s+/g, '').indexOf(q) !== -1 ||
+          (qd.length >= 3 && r.idKey.indexOf(qd) !== -1) || String(r.seq) === q;
+      });
+    }
+    var k = u.key, dir = u.dir;
+    return rows.slice().sort(function (a, b) {
+      var x = a[k], y = b[k];
+      if (typeof x === 'boolean') x = x ? 1 : 0;
+      if (typeof y === 'boolean') y = y ? 1 : 0;
+      var nx = x == null, ny = y == null;
+      if (nx || ny) return nx && ny ? 0 : nx ? 1 : -1; // ค่าว่างอยู่ท้ายเสมอ
+      var c = typeof x === 'string' ? x.localeCompare(y, 'th') : x - y;
+      return c * dir || a.seq - b.seq;
+    });
+  }
+
+  function renderAdminRows() {
+    var rows = adminRows(), u = state.adminUi;
+    var max = state.adminData.max;
+    document.getElementById('admCount').textContent = '(' + rows.length + ' / ' + state.adminData.rows.length + ' คน)';
+    Array.prototype.forEach.call(document.querySelectorAll('#admTbl th'), function (th) {
+      var on = th.getAttribute('data-sort') === u.key;
+      th.querySelector('.si').textContent = on ? (u.dir > 0 ? '▲' : '▼') : '';
+      th.setAttribute('aria-sort', on ? (u.dir > 0 ? 'ascending' : 'descending') : 'none');
+    });
+    document.getElementById('admBody').innerHTML = rows.length ? rows.map(function (r) {
+      return '<tr tabindex="0" data-id="' + esc(r.idKey) + '" aria-label="ดูข้อมูลของ ' + esc(r.name) + '">' +
+        '<td class="num">' + r.seq + '</td><td>' + esc(r.id) + '</td><td>' + esc(r.name) + '</td>' +
+        '<td class="num">' + fmt(r.mcq) + '</td><td class="num">' + fmt(r.q1) + '</td><td class="num">' + fmt(r.q2) + '</td><td class="num">' + fmt(r.q3) + '</td>' +
+        '<td class="num">' + fmt(r.written) + '</td><td class="num"><b>' + fmt(r.total) + '</b></td><td class="num">' + (r.rank == null ? '–' : r.rank) + '</td>' +
+        '<td>' + (r.registered ? badge('ok', ICON.check, 'แล้ว') : badge('', ICON.dash, 'ยัง')) + '</td>' +
+        '<td>' + (r.pdf == null ? '–' : r.pdf ? badge('ok', ICON.check, 'มี') : badge('bad', ICON.x, 'ไม่พบ')) + '</td></tr>';
+    }).join('') : '<tr><td colspan="' + ADM_COLS.length + '" class="empty">ไม่พบนักศึกษาที่ตรงกับคำค้น</td></tr>';
+  }
+
+  function csvCell(v, isText) {
+    if (v == null) return '';
+    var s = String(v);
+    if (isText && /^[=+\-@\t\r]/.test(s)) s = "'" + s; // กัน CSV/สูตร injection เมื่อเปิดใน Excel
+    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+
+  function exportCsv(rows) {
+    var head = ['ลำดับ', 'รหัสนักศึกษา', 'ชื่อ-สกุล', 'กลุ่ม', 'ปรนัย', 'อัตนัยข้อ 1', 'อัตนัยข้อ 2', 'อัตนัยข้อ 3', 'อัตนัยรวม', 'คะแนนรวม', 'อันดับ', 'ลงทะเบียน', 'มี PDF'];
+    var lines = [head.join(',')];
+    rows.forEach(function (r) {
+      lines.push([csvCell(r.seq), csvCell(r.id, true), csvCell(r.name, true), csvCell(r.group, true), csvCell(r.mcq), csvCell(r.q1), csvCell(r.q2), csvCell(r.q3),
+        csvCell(r.written), csvCell(r.total), csvCell(r.rank), r.registered ? 'ลงทะเบียนแล้ว' : 'ยังไม่ลงทะเบียน',
+        r.pdf == null ? '' : r.pdf ? 'มี' : 'ไม่พบ'].join(','));
+    });
+    var bytes = new TextEncoder().encode('﻿' + lines.join('\r\n'));
+    var url = URL.createObjectURL(new Blob([bytes], { type: 'text/csv;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url; a.download = 'score-summary.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+
+  function openStudent(idKey) {
+    renderLoading();
+    callApi('api_adminStudent', state.admin.token, idKey).then(function (r) {
+      if (!r || !r.ok) {
+        if (r && r.expired) return adminExpired();
+        return renderAdminOverview(state.adminData, (r && r.error) || NET_ERR);
+      }
+      state.adminView = { idKey: idKey, id: r.data.student.id, name: r.data.student.name, registered: r.registered, published: r.published };
+      state.course = r.course;
+      renderDashboard(r.data);
+      window.scrollTo(0, 0);
+    }).catch(function () { renderAdminOverview(state.adminData, NET_ERR); });
+  }
+
   /* ---------- เริ่มต้น ---------- */
 
-  var saved = store.get('sp_token');
-  if (saved && saved.length === 64) { state.token = saved; loadDashboard(); }
-  else renderAuth();
+  if (BOOT.admin) {
+    var savedAdmin = store.get('sp_atoken');
+    if (savedAdmin && savedAdmin.length === 64) { state.admin = { token: savedAdmin }; loadAdminOverview(); }
+    else renderAdminAuth();
+  } else {
+    var saved = store.get('sp_token');
+    if (saved && saved.length === 64) { state.token = saved; loadDashboard(); }
+    else renderAuth();
+  }
 })();
 </script>

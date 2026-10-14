@@ -10,7 +10,7 @@ const vm = require('vm');
 const crypto = require('crypto');
 
 const ROOT = path.join(__dirname, '..');
-const FILES = ['Config.gs', 'Lib.gs', 'Data.gs', 'Store.gs', 'Auth.gs', 'Code.gs', 'Admin.gs'];
+const FILES = ['Config.gs', 'Lib.gs', 'Data.gs', 'Store.gs', 'Auth.gs', 'Code.gs', 'AdminApi.gs', 'Admin.gs'];
 
 const toBuf = (x) => (typeof x === 'string' ? Buffer.from(x, 'utf8') : Buffer.from(x.map((b) => b & 255)));
 const toSigned = (buf) => Array.from(buf).map((b) => (b > 127 ? b - 256 : b));
@@ -143,7 +143,15 @@ function createEnv(opts = {}) {
       getEffectiveUser: () => ({ getEmail: () => state.session.effective }),
       getActiveUser: () => ({ getEmail: () => state.session.active })
     },
-    HtmlService: {}
+    HtmlService: {
+      // จำลอง createTemplateFromFile: เก็บค่า boot ที่ doGet ใส่ไว้ให้เทสต์ตรวจ
+      createTemplateFromFile(name) {
+        const t = {};
+        t.evaluate = () => { const o = { name, boot: t.boot, setTitle(x) { o.title = x; return o; }, addMetaTag() { return o; } }; return o; };
+        return t;
+      }
+    },
+    ScriptApp: { getService: () => ({ getUrl: () => 'https://script.google.com/macros/s/TEST/exec' }) }
   };
   const ctx = vm.createContext(sandbox);
   FILES.forEach((f) => vm.runInContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), ctx, { filename: f }));

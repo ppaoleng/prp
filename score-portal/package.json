@@ -3,7 +3,7 @@
   "private": true,
   "description": "Student score announcement portal (Google Apps Script + Google Sheets)",
   "scripts": {
-    "test": "node --test tests/portal.test.js",
+    "test": "node --test tests/portal.test.js tests/admin.test.js",
     "preview": "node dev/build-preview.js dev/out"
   },
   "engines": { "node": ">=20" }
