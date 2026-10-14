@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="robots" content="noindex, nofollow">
+  <title>ประกาศคะแนน</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <?!= include('Styles'); ?>
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div id="app" class="app" aria-live="polite"></div>
+  <div id="tip" role="tooltip" hidden></div>
+
+  <noscript>
+    <div style="max-width:520px;margin:20vh auto;padding:20px;text-align:center">
+      หน้านี้ต้องเปิด JavaScript เพื่อใช้งาน กรุณาเปิดใน Chrome, Safari หรือ Edge
+    </div>
+  </noscript>
+
+  <script>window.__BOOT__ = <?!= boot ?>;</script>
+  <?!= include('Script'); ?>
+</body>
+</html>
