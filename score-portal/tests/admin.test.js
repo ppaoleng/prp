@@ -196,7 +196,7 @@ test('api_adminLogout ยกเลิกเซสชัน', () => {
 test('เมนูผู้ดูแลใหม่ต้องตรวจสิทธิ์ ผู้เข้าชมเว็บเรียกไม่ได้', () => {
   const env = adminEnv();
   env.asVisitor();
-  for (const fn of ['adminSetPassword', 'adminShowLink', 'adminRotateKey']) {
+  for (const fn of ['adminSetPassword', 'adminShowLink', 'adminRotateKey', 'adminConfigure']) {
     assert.throws(() => env.ctx[fn](), /ผู้ดูแลระบบ/, fn);
   }
   assert.equal(env.state.props.ADMIN_KEY, env.key, 'คีย์ต้องไม่ถูกเปลี่ยนโดยผู้เข้าชม');
@@ -226,7 +226,7 @@ test('ทุกฟังก์ชันที่หน้าเว็บเร�
     'api_register', 'api_login', 'api_logout', 'api_dashboard', 'api_pdf',
     'api_adminLogin', 'api_adminLogout', 'api_adminOverview', 'api_adminStudent', 'api_adminPdf',
     'adminSetup', 'adminCheckData', 'adminPublishOn', 'adminPublishOff', 'adminClearCache',
-    'adminSetPassword', 'adminShowLink', 'adminRotateKey', 'adminGenerateCodes', 'adminResetPassword']);
+    'adminSetPassword', 'adminShowLink', 'adminRotateKey', 'adminGenerateCodes', 'adminResetPassword', 'adminConfigure']);
   for (const n of names) assert.ok(allowed.has(n), 'ฟังก์ชันสาธารณะที่ไม่ได้อนุญาต: ' + n);
   // ทุก admin* (เมนู) ต้องเรียก assertAdmin_ ก่อน
   for (const f of fs.readdirSync(path.join(__dirname, '..')).filter((x) => x.endsWith('.gs'))) {
@@ -235,4 +235,58 @@ test('ทุกฟังก์ชันที่หน้าเว็บเร�
       assert.equal(m[2], 'assertAdmin_', m[1] + ' ต้องตรวจสิทธิ์เป็นบรรทัดแรก');
     }
   }
+});
+
+test('extractDriveId_: รับลิงก์ Sheets/โฟลเดอร์/ID ล้วน และปฏิเสธข้อความอื่น', () => {
+  const { ctx } = createReadyEnv(F);
+  const id = '1udBVVdhtxV0v-kOgW0l9fMa4QupPqQt1';
+  const x = (t) => ctx.extractDriveId_(t);
+  assert.equal(x('https://docs.google.com/spreadsheets/d/' + id + '/edit?usp=sharing'), id);
+  assert.equal(x('https://docs.google.com/spreadsheets/d/' + id + '/edit#gid=0'), id);
+  assert.equal(x('https://drive.google.com/drive/folders/' + id + '?usp=sharing'), id);
+  assert.equal(x('https://drive.google.com/drive/u/0/folders/' + id), id);
+  assert.equal(x('https://drive.google.com/open?id=' + id), id);
+  assert.equal(x('  ' + id + '  '), id);
+  assert.equal(x(''), '');
+  assert.equal(x('สวัสดี'), '');
+  assert.equal(x('abc'), '');
+  assert.equal(x(null), '');
+});
+
+test('adminConfigure: วางลิงก์ -> ตั้งค่า -> ตรวจข้อมูลทันที; เว้นว่าง/ยกเลิกไม่เปลี่ยนค่า', () => {
+  const env = createReadyEnv(F);
+  env.setting('scores_spreadsheet_id', '');
+  env.setting('pdf_folder_id', '');
+  // ยกเลิกระหว่างทาง = ไม่เปลี่ยนอะไร
+  env.state.promptQueue = ['CANCEL'];
+  env.ctx.adminConfigure();
+  assert.equal(plain(env.ctx.getSettings_()).scores_spreadsheet_id, '');
+  // วางลิงก์จริง
+  env.state.uiLog.length = 0;
+  env.state.promptQueue = ['https://docs.google.com/spreadsheets/d/SCORES1/edit?usp=sharing', 'https://drive.google.com/drive/folders/FOLDER1?usp=sharing'];
+  env.ctx.adminConfigure();
+  const st = plain(env.ctx.getSettings_());
+  assert.equal(st.scores_spreadsheet_id, 'SCORES1');
+  assert.equal(st.pdf_folder_id, 'FOLDER1');
+  const report = env.state.uiLog.join('\n');
+  assert.match(report, /ตั้งไฟล์คะแนนแล้ว/);
+  assert.match(report, /นักศึกษาในชีตคะแนน: 6 คน/);
+  assert.match(report, /จับคู่ PDF ได้ครบ/);
+  // เว้นว่างทั้งสองช่อง = คงค่าเดิม
+  env.state.promptQueue = ['', ''];
+  env.ctx.adminConfigure();
+  assert.equal(plain(env.ctx.getSettings_()).scores_spreadsheet_id, 'SCORES1');
+  // ลิงก์ที่อ่านไม่ออก -> แจ้งและไม่เปลี่ยน
+  env.state.uiLog.length = 0;
+  env.state.promptQueue = ['ไม่ใช่ลิงก์', ''];
+  env.ctx.adminConfigure();
+  assert.match(env.state.uiLog.join('\n'), /อ่านลิงก์ไฟล์คะแนนไม่ออก/);
+  assert.equal(plain(env.ctx.getSettings_()).scores_spreadsheet_id, 'SCORES1');
+});
+
+test('adminConfigure: ไฟล์เปิดไม่ได้ -> รายงานข้อผิดพลาดที่อ่านเข้าใจ ไม่ล่ม', () => {
+  const env = createReadyEnv(F);
+  env.state.promptQueue = ['https://docs.google.com/spreadsheets/d/NOPE/edit', ''];
+  env.ctx.adminConfigure();
+  assert.match(env.state.uiLog.join('\n'), /อ่านข้อมูลไม่สำเร็จ/);
 });

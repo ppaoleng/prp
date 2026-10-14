@@ -9,12 +9,13 @@ function onOpen() {
   try {
     SpreadsheetApp.getUi().createMenu('Score Portal')
       .addItem('1) ตั้งค่าเริ่มต้น (ครั้งแรก)', 'adminSetup')
-      .addItem('2) ตรวจสอบข้อมูลคะแนนและ PDF', 'adminCheckData')
+      .addItem('2) วางลิงก์ไฟล์คะแนนและโฟลเดอร์ PDF', 'adminConfigure')
+      .addItem('3) ตั้งรหัสผ่านผู้ดูแล (หน้าดูข้อมูลทุกคน)', 'adminSetPassword')
+      .addItem('4) ตรวจสอบข้อมูลคะแนนและ PDF', 'adminCheckData')
       .addSeparator()
       .addItem('เปิดประกาศผล', 'adminPublishOn')
       .addItem('ปิดประกาศผล (ล็อก)', 'adminPublishOff')
       .addSeparator()
-      .addItem('ตั้งรหัสผ่านผู้ดูแล (หน้าดูข้อมูลทุกคน)', 'adminSetPassword')
       .addItem('แสดงลิงก์ผู้ดูแล', 'adminShowLink')
       .addItem('สร้างลิงก์ผู้ดูแลใหม่ (ถ้าลิงก์รั่ว)', 'adminRotateKey')
       .addSeparator()
@@ -173,6 +174,51 @@ function adminCheckData() {
   }
   alert_(lines.slice(0, 40).join('\n') + (lines.length > 40 ? '\n… (อีก ' + (lines.length - 40) + ' บรรทัด ดูใน Logs)' : ''));
   console.log(lines.join('\n'));
+}
+
+/** ดึง ID ไฟล์/โฟลเดอร์จากลิงก์ Google Drive/Docs หรือรับ ID ล้วนๆ; คืน '' ถ้าไม่เข้ารูปแบบ */
+function extractDriveId_(text) {
+  var t = String(text == null ? '' : text).trim();
+  if (!t) return '';
+  var m = /\/(?:d|folders)\/([A-Za-z0-9_-]+)/.exec(t) || /[?&]id=([A-Za-z0-9_-]+)/.exec(t);
+  if (m) return m[1];
+  return /^[A-Za-z0-9_-]{20,}$/.test(t) ? t : '';
+}
+
+/** วางลิงก์ไฟล์คะแนน (Google Sheets) และโฟลเดอร์ PDF แล้วตรวจข้อมูลให้ทันที */
+function adminConfigure() {
+  assertAdmin_();
+  var ui = SpreadsheetApp.getUi();
+  function ask(title, text) {
+    var r = ui.prompt(title, text, ui.ButtonSet.OK_CANCEL);
+    return r.getSelectedButton() === ui.Button.OK ? r.getResponseText() : null;
+  }
+  var sheetLink = ask('1/2 ไฟล์สรุปคะแนน', 'วางลิงก์ของไฟล์สรุปคะแนนที่แปลงเป็น Google Sheets แล้ว (เปิดไฟล์แล้วคัดลอกลิงก์จากแถบที่อยู่เบราว์เซอร์)\nเว้นว่างไว้ = ไม่เปลี่ยน');
+  if (sheetLink === null) return;
+  var folderLink = ask('2/2 โฟลเดอร์ PDF', 'วางลิงก์โฟลเดอร์ที่เก็บ PDF ที่ตรวจแล้ว\nเว้นว่างไว้ = ไม่เปลี่ยน');
+  if (folderLink === null) return;
+  var msgs = [];
+  if (sheetLink.trim()) {
+    var sid = extractDriveId_(sheetLink);
+    if (!sid) return alert_('อ่านลิงก์ไฟล์คะแนนไม่ออก — ลองคัดลอกลิงก์ทั้งหมดจากแถบที่อยู่เบราว์เซอร์อีกครั้ง');
+    setSetting_('scores_spreadsheet_id', sid);
+    msgs.push('ตั้งไฟล์คะแนนแล้ว');
+  }
+  if (folderLink.trim()) {
+    var fid = extractDriveId_(folderLink);
+    if (!fid) return alert_('อ่านลิงก์โฟลเดอร์ไม่ออก — ลองคัดลอกลิงก์ทั้งหมดจากแถบที่อยู่เบราว์เซอร์อีกครั้ง');
+    setSetting_('pdf_folder_id', fid);
+    msgs.push('ตั้งโฟลเดอร์ PDF แล้ว');
+  }
+  clearAllCaches_();
+  var lines;
+  try {
+    lines = buildCheckReport_(getSettings_());
+  } catch (e) {
+    lines = ['✗ อ่านข้อมูลไม่สำเร็จ: ' + (e && e.message ? e.message : e),
+      'ตรวจว่าบัญชีนี้เปิดไฟล์/โฟลเดอร์นั้นได้ และไฟล์เป็น Google Sheets (ไม่ใช่ .xlsx)'];
+  }
+  alert_((msgs.length ? msgs.join(' · ') + '\n\n' : '') + lines.slice(0, 40).join('\n'));
 }
 
 var CODE_ALPHABET_ = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';

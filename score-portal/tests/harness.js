@@ -125,8 +125,12 @@ function createEnv(opts = {}) {
       openById(id) { if (!state.spreadsheets[id]) throw new Error('no spreadsheet ' + id); return state.spreadsheets[id]; },
       getUi: () => ({
         alert(m) { state.uiLog.push(m); },
-        prompt() { return { getSelectedButton: () => 'OK', getResponseText: () => state.promptText || '' }; },
-        ButtonSet: { OK_CANCEL: 1 }, Button: { OK: 'OK' },
+        prompt() {
+          const q = state.promptQueue && state.promptQueue.length ? state.promptQueue.shift() : null;
+          if (q === 'CANCEL') return { getSelectedButton: () => 'CANCEL', getResponseText: () => '' };
+          return { getSelectedButton: () => 'OK', getResponseText: () => (q != null ? q : state.promptText || '') };
+        },
+        ButtonSet: { OK_CANCEL: 1 }, Button: { OK: 'OK', CANCEL: 'CANCEL' },
         createMenu: () => { const m = { addItem: () => m, addSeparator: () => m, addToUi: () => m }; return m; }
       })
     },
@@ -154,7 +158,7 @@ function createEnv(opts = {}) {
     ScriptApp: { getService: () => ({ getUrl: () => 'https://script.google.com/macros/s/TEST/exec' }) }
   };
   const ctx = vm.createContext(sandbox);
-  FILES.forEach((f) => vm.runInContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), ctx, { filename: f }));
+  (opts.files || FILES).forEach((f) => vm.runInContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), ctx, { filename: f }));
 
   const env = {
     ctx, state, db,
@@ -180,8 +184,8 @@ function createEnv(opts = {}) {
 }
 
 /** สภาพแวดล้อมพร้อมใช้: ตั้งค่าแล้ว มีชีตคะแนนสมมติและ PDF ครบ */
-function createReadyEnv(fixtures, { published = true, pdf = true } = {}) {
-  const env = createEnv();
+function createReadyEnv(fixtures, { published = true, pdf = true, files } = {}) {
+  const env = createEnv({ files });
   env.ctx.adminSetup();
   env.addScores('SCORES1', {
     'สรุปคะแนน': fixtures.summaryTab(),
