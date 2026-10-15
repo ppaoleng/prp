@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="529.92pt" height="596.2752pt" viewBox="0 0 529.92 596.2752" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-15T03:25:28.627369</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 596.2752 
+L 529.92 596.2752 
+L 529.92 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="line2d_1">
+    <path d="M 264.96 52.9344 
+L 264.96 62.2656 
+" clip-path="url(#pacfb13f706)" style="fill: none; stroke: #1a1a1a"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 264.96 160.7616 
+L 264.96 170.0928 
+" clip-path="url(#pacfb13f706)" style="fill: none; stroke: #1a1a1a"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 264.96 264.4416 
+L 264.96 273.7728 
+" clip-path="url(#pacfb13f706)" style="fill: none; stroke: #1a1a1a"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 264.96 354.6432 
+L 264.96 363.9744 
+" clip-path="url(#pacfb13f706)" style="fill: none; stroke: #1a1a1a"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 264.96 444.8448 
+L 264.96 454.176 
+" clip-path="url(#pacfb13f706)" style="fill: none; stroke: #1a1a1a"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 264.96 535.0464 
+L 264.96 544.3776 
+" clip-path="url(#pacfb13f706)" style="fill: none; stroke: #1a1a1a"/>
+   </g>
+   <g id="patch_2">
+    <path d="M 5.76 52.9344 
+L 524.16 52.9344 
+L 524.16 7.3152 
+L 5.76 7.3152 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #e3e4e5; stroke: #5c5c58; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 5.76 160.7616 
+L 524.16 160.7616 
+L 524.16 67.4496 
+L 5.76 67.4496 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #f4f4f1; stroke: #5c5c58; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 5.76 264.4416 
+L 524.16 264.4416 
+L 524.16 175.2768 
+L 5.76 175.2768 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #f4f4f1; stroke: #5c5c58; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 5.76 354.6432 
+L 524.16 354.6432 
+L 524.16 278.9568 
+L 5.76 278.9568 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #f4f4f1; stroke: #5c5c58; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 5.76 444.8448 
+L 524.16 444.8448 
+L 524.16 369.1584 
+L 5.76 369.1584 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #f4f4f1; stroke: #5c5c58; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 5.76 535.0464 
+L 524.16 535.0464 
+L 524.16 459.36 
+L 5.76 459.36 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #f4f4f1; stroke: #5c5c58; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 5.76 588.96 
+L 524.16 588.96 
+L 524.16 549.5616 
+L 5.76 549.5616 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #3b4048; stroke: #3b4048; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 16.128 151.4304 
+L 107.3664 151.4304 
+L 107.3664 95.4432 
+L 16.128 95.4432 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 117.7344 151.4304 
+L 208.9728 151.4304 
+L 208.9728 95.4432 
+L 117.7344 95.4432 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 219.3408 151.4304 
+L 310.5792 151.4304 
+L 310.5792 95.4432 
+L 219.3408 95.4432 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 320.9472 151.4304 
+L 412.1856 151.4304 
+L 412.1856 95.4432 
+L 320.9472 95.4432 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #e7edf2; stroke: #274a63; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 422.5536 151.4304 
+L 513.792 151.4304 
+L 513.792 95.4432 
+L 422.5536 95.4432 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #f0e9df; stroke: #6e5636; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 16.128 255.1104 
+L 259.776 255.1104 
+L 259.776 203.2704 
+L 16.128 203.2704 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #f0e9df; stroke: #6e5636; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 270.144 255.1104 
+L 513.792 255.1104 
+L 513.792 203.2704 
+L 270.144 203.2704 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #e7edf2; stroke: #274a63; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 16.128 345.312 
+L 175.104 345.312 
+L 175.104 306.9504 
+L 16.128 306.9504 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 185.472 345.312 
+L 344.448 345.312 
+L 344.448 306.9504 
+L 185.472 306.9504 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 354.816 345.312 
+L 513.792 345.312 
+L 513.792 306.9504 
+L 354.816 306.9504 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 16.128 435.5136 
+L 132.768 435.5136 
+L 132.768 397.152 
+L 16.128 397.152 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 143.136 435.5136 
+L 259.776 435.5136 
+L 259.776 397.152 
+L 143.136 397.152 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 270.144 435.5136 
+L 386.784 435.5136 
+L 386.784 397.152 
+L 270.144 397.152 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 397.152 435.5136 
+L 513.792 435.5136 
+L 513.792 397.152 
+L 397.152 397.152 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #e4ece6; stroke: #4f7a5c; stroke-width: 1.1; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 16.128 525.7152 
+L 175.104 525.7152 
+L 175.104 487.3536 
+L 16.128 487.3536 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 185.472 525.7152 
+L 344.448 525.7152 
+L 344.448 487.3536 
+L 185.472 487.3536 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 354.816 525.7152 
+L 513.792 525.7152 
+L 513.792 487.3536 
+L 354.816 487.3536 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #ffffff; stroke: #2b2b28; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 264.96 67.4496 
+L 260.8128 58.6368 
+L 269.1072 58.6368 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 264.96 175.2768 
+L 260.8128 166.464 
+L 269.1072 166.464 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 264.96 278.9568 
+L 260.8128 270.144 
+L 269.1072 270.144 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 264.96 369.1584 
+L 260.8128 360.3456 
+L 269.1072 360.3456 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 264.96 459.36 
+L 260.8128 450.5472 
+L 269.1072 450.5472 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 264.96 549.5616 
+L 260.8128 540.7488 
+L 269.1072 540.7488 
+z
+" clip-path="url(#pacfb13f706)" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.3; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="18.2016" y="24.626144" transform="rotate(-0 18.2016 24.626144)">1.</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="36.3456" y="24.61987" transform="rotate(-0 36.3456 24.61987)">Literature review and gap analysis</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 7.2px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="264.96" y="42.356081" transform="rotate(-0 264.96 42.356081)">Biochar in cementitious materials  ·  Recycled concrete aggregate (RCA)  ·  Concrete paving blocks  ·  Slip resistance  ·  LCA</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="18.2016" y="84.760544" transform="rotate(-0 18.2016 84.760544)">2.</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="36.3456" y="84.760544" transform="rotate(-0 36.3456 84.760544)">Materials</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="61.7472" y="119.88576" transform="rotate(-0 61.7472 119.88576)">Portland cement</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="61.7472" y="130.51296" transform="rotate(-0 61.7472 130.51296)">OPC Type I</text>
+   </g>
+   <g id="text_8">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="163.3536" y="119.88576" transform="rotate(-0 163.3536 119.88576)">Fine aggregate (sand)</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="163.3536" y="130.51296" transform="rotate(-0 163.3536 130.51296)">passing No. 4 sieve</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="264.96" y="125.19936" transform="rotate(-0 264.96 125.19936)">Crushed stone</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="366.5664" y="108.74016" transform="rotate(-0 366.5664 108.74016)">Recycled concrete</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="366.5664" y="120.40416" transform="rotate(-0 366.5664 120.40416)">aggregate (RCA)</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="366.5664" y="131.03136" transform="rotate(-0 366.5664 131.03136)">lab-waste concrete,</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="366.5664" y="141.65856" transform="rotate(-0 366.5664 141.65856)">0.30–2.36 mm</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="468.1728" y="119.88576" transform="rotate(-0 468.1728 119.88576)">Bamboo biochar</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="468.1728" y="130.51296" transform="rotate(-0 468.1728 130.51296)">No. 100 / 200</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="18.2016" y="192.587744" transform="rotate(-0 18.2016 192.587744)">3.</text>
+   </g>
+   <g id="text_18">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="36.3456" y="192.58147" transform="rotate(-0 36.3456 192.58147)">Mix design (cement : sand : stone)</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="137.952" y="219.80736" transform="rotate(-0 137.952 219.80736)">Series 1  ·  RCA at 50 % of fine aggregate</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="137.952" y="231.47136" transform="rotate(-0 137.952 231.47136)">Cement replaced by biochar: 5–25 %</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="137.952" y="242.09856" transform="rotate(-0 137.952 242.09856)">designed 5–25 %; tested 0–15 %</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 700; font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="391.968" y="225.12096" transform="rotate(-0 391.968 225.12096)">Series 2  ·  biochar constant at 48 g</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="391.968" y="236.78496" transform="rotate(-0 391.968 236.78496)">RCA replacing sand: 0, 5, 10, 15 %</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="18.2016" y="296.267744" transform="rotate(-0 18.2016 296.267744)">4.</text>
+   </g>
+   <g id="text_25">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="36.3456" y="296.26147" transform="rotate(-0 36.3456 296.26147)">Mixing, forming and curing</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="95.616" y="322.58016" transform="rotate(-0 95.616 322.58016)">Mechanical mixing</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="95.616" y="333.20736" transform="rotate(-0 95.616 333.20736)">mortar mixer</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="264.96" y="322.58016" transform="rotate(-0 264.96 322.58016)">Hand-tamped zig-zag block</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="264.96" y="333.20736" transform="rotate(-0 264.96 333.20736)">6 cm thick</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="434.304" y="322.58016" transform="rotate(-0 434.304 322.58016)">Curing: 7, 14 and 28 days</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="434.304" y="333.20736" transform="rotate(-0 434.304 333.20736)">3 blocks per age</text>
+   </g>
+   <g id="text_32">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="18.2016" y="386.469344" transform="rotate(-0 18.2016 386.469344)">5.</text>
+   </g>
+   <g id="text_33">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="36.3456" y="386.46307" transform="rotate(-0 36.3456 386.46307)">Testing of block properties</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="74.448" y="418.09536" transform="rotate(-0 74.448 418.09536)">Density</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="201.456" y="412.78176" transform="rotate(-0 201.456 412.78176)">Compressive strength</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="201.456" y="423.40896" transform="rotate(-0 201.456 423.40896)">TIS 827-2565</text>
+   </g>
+   <g id="text_37">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="328.464" y="412.78176" transform="rotate(-0 328.464 412.78176)">Water absorption</text>
+   </g>
+   <g id="text_38">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="328.464" y="423.40896" transform="rotate(-0 328.464 423.40896)">72 h</text>
+   </g>
+   <g id="text_39">
+    <text style="font-weight: 700; font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="455.472" y="412.78176" transform="rotate(-0 455.472 412.78176)">Slip resistance (BPT)</text>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="455.472" y="423.40896" transform="rotate(-0 455.472 423.40896)">dry / wet</text>
+   </g>
+   <g id="text_41">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="18.2016" y="476.670944" transform="rotate(-0 18.2016 476.670944)">6.</text>
+   </g>
+   <g id="text_42">
+    <text style="font-weight: 700; font-size: 8.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1a1a1a" x="36.3456" y="476.66467" transform="rotate(-0 36.3456 476.66467)">Results analysis and screening LCA</text>
+   </g>
+   <g id="text_43">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="95.616" y="502.98336" transform="rotate(-0 95.616 502.98336)">Statistical analysis</text>
+   </g>
+   <g id="text_44">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="95.616" y="513.61056" transform="rotate(-0 95.616 513.61056)">ANOVA / Tukey</text>
+   </g>
+   <g id="text_45">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="264.96" y="502.98336" transform="rotate(-0 264.96 502.98336)">Material-mechanics models</text>
+   </g>
+   <g id="text_46">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="264.96" y="513.61056" transform="rotate(-0 264.96 513.61056)">porosity–strength, maturity</text>
+   </g>
+   <g id="text_47">
+    <text style="font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #1a1a1a" x="434.304" y="502.98336" transform="rotate(-0 434.304 502.98336)">GWP per 1 m³ and ci</text>
+   </g>
+   <g id="text_48">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #5c5c58" x="434.304" y="513.61056" transform="rotate(-0 434.304 513.61056)">cradle-to-gate</text>
+   </g>
+   <g id="text_49">
+    <text style="font-weight: 700; font-size: 7.8px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #ffffff" x="264.96" y="565.70976" transform="rotate(-0 264.96 565.70976)">Optimum mix selection, benchmarking and recommendations</text>
+   </g>
+   <g id="text_50">
+    <text style="font-size: 7px; font-family: 'Arial', 'Liberation Sans', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #d9dcdf" x="264.96" y="576.33696" transform="rotate(-0 264.96 576.33696)">comparison with standard criteria and other studies</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pacfb13f706">
+   <rect x="5.76" y="5.76" width="518.4" height="584.7552"/>
+  </clipPath>
+ </defs>
+</svg>

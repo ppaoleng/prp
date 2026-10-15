@@ -12,6 +12,14 @@ WARM = "#9c7a52"          # muted warm brown  -> bamboo-biochar stream
 WARM_EDGE = "#6e5636"
 WARM_TINT = "#f0e9df"
 NEUTRAL_FILL = "#e3e4e5"
+PANEL_FILL = "#f4f4f1"
+SLATE = "#3b4048"          # neutral dark fill (concluding box)
+OK_GREEN = "#4f7a5c"       # muted green, for emphasis
+OK_TINT = "#e4ece6"
+
+# Colour coding shared by ALL figures of one paper (swap here to change everywhere)
+STREAM_RCA = dict(fill=ACCENT_TINT, edge=ACCENT_EDGE, bar=ACCENT)       # recycled concrete aggregate
+STREAM_BIOCHAR = dict(fill=WARM_TINT, edge=WARM_EDGE, bar=WARM)         # bamboo biochar
 
 
 def apply_style():
